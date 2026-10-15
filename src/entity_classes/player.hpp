@@ -16,7 +16,7 @@ class Player : public Sprite {
         void update();
 
         Vector2 getVelocity() const { return velocity; };
-        ShouldCameraMove getCameraMoved() const { return shouldCameraMove; };
+        Vector2 getCameraMovement() const { return cameraMovement; };
 
     private:
 
@@ -39,10 +39,11 @@ class Player : public Sprite {
 
         Dir direction = Dir::RIGHT;
         PlayerAnimState state = PlayerAnimState::IDLE;
-        ShouldCameraMove shouldCameraMove;
 
         std::vector<Tile> &tiles;
 
         Rectangle cameraBox;
         Rectangle hitBox;
+
+        Vector2 cameraMovement = {0, 0};
 };

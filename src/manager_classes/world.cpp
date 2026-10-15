@@ -2,23 +2,18 @@
 
 World::World() {
 
+    tiles.push_back(Tile({500, 600}, pickedTile));
 }
 
-void World::updateTiles(const Vector2 playerVelocity, const ShouldCameraMove cameraMovement) {
+void World::updateTiles(const Vector2 cameraMovement) {
 
-    if(cameraMovement.moveX) {
+    // Camera movement is opposite to player movement -> Fake Scrolling used since the 1900s
 
-        for(Tile &tile : tiles) {
-
-            tile.move({roundf(-playerVelocity.x), 0});
-        }
-    }
-
-    if(cameraMovement.moveY) {
+    if(cameraMovement != (Vector2) {0, 0}) {
 
         for(Tile &tile : tiles) {
 
-            tile.move({0, roundf(-playerVelocity.y)});
+            tile.move({cameraMovement.x, cameraMovement.y});
         }
     }
 
@@ -28,9 +23,12 @@ void World::updateTiles(const Vector2 playerVelocity, const ShouldCameraMove cam
     }    
 }
 
-void World::update(const Vector2 playerVelocity, const ShouldCameraMove cameraMovement) {
+void World::update(const Vector2 cameraMovement) {
 
-    updateTiles(playerVelocity, cameraMovement);
+    updateTiles(cameraMovement);
+
+    if(cameraMovement != (Vector2) {0, 0})
+        worldPos <<= cameraMovement * GetFrameTime();
 
 #if DEBUG_ENABLED
 
@@ -50,18 +48,24 @@ std::vector<Tile> &World::giveTiles() {
 
 void World::dev_tilePlacer() {
 
-    if(GetMouseDelta().x != 0 || GetMouseDelta().y != 0) {
+    if((GetMouseDelta() != (Vector2) {0, 0}) || worldPos != tempWorldVec) {
 
-        for(float x = 0; x < tileSize.x * 200; x += tileSize.x) {
-            for(float y = 0; y < tileSize.y * 200; y += tileSize.y) {
+        tempWorldVec = worldPos;
 
-                if(CheckCollisionPointRec(GetMousePosition(), {x, y, tileSize.x, tileSize.y})) {
-                    tilePlacerRect = {x, y, tileSize.x, tileSize.y};
+        for(float x = 0; x < tileSize.x * WORLD_SIZE; x += tileSize.x) {
+            for(float y = 0; y < tileSize.y * WORLD_SIZE; y += tileSize.y) {
+
+                if(CheckCollisionPointRec(
+                    GetMousePosition(), 
+                    {x + worldPos.x, y + worldPos.y, tileSize.x, tileSize.y}
+                )) {
+                    tilePlacerRect = {x + worldPos.x, y + worldPos.y, tileSize.x, tileSize.y};
                     break;
                 }
             }
         }
     }
+
 
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 

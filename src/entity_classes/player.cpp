@@ -9,8 +9,9 @@ Player::Player(Rectangle object, std::vector<Tile> &tiles):
 }
 
 void Player::update() {
-
+    
     addressInput();
+    applyGravity();
     move();
 
     draw();
@@ -18,7 +19,7 @@ void Player::update() {
 
 void Player::draw() {
 
-    applyGravity();
+    
     handleAnimation();
 
     DrawTextureRec(
@@ -34,13 +35,13 @@ void Player::move() {
 
     updateCamera();
 
-    object.x += velocity.x;
-    collisionX();
     moveCameraX();
+    object.x += velocity.x * GetFrameTime();
+    collisionX();
 
-    object.y += velocity.y;
-    collisionY();
     moveCameraY();
+    object.y += velocity.y  * GetFrameTime();
+    collisionY();
 }
 
 void Player::handleAnimation() {
@@ -84,15 +85,16 @@ void Player::handleFraming() {
 
 void Player::addressInput() {
 
+    cameraMovement = {0, 0};
     velocity.x = 0;
 
     if(getInput().goingLeft)
-        velocity.x = -PLAYER_SPEED * GetFrameTime();
+        velocity.x = -PLAYER_SPEED;
     if(getInput().goingRight)
-        velocity.x = PLAYER_SPEED * GetFrameTime();
+        velocity.x = PLAYER_SPEED;
 
     if(getInput().isJumping)
-        velocity.y = PLAYER_JUMP_SPEED * GetFrameTime();
+        velocity.y = PLAYER_JUMP_SPEED;
 }
 
 void Player::handleDirection() {
@@ -185,27 +187,37 @@ void Player::collisionY() {
     }
 }
 
-void Player::moveCameraX() {
+void Player::moveCameraX() {  
 
-    if((hitBox.x <= cameraBox.x || hitBox.x + hitBox.width >= cameraBox.x + cameraBox.width) && velocity.x != 0) {
+    if(hitBox.x <= cameraBox.x && velocity.x <= 0) {
 
-        object.x -= velocity.x;
-        shouldCameraMove.moveX = true;
+        cameraMovement.x = -velocity.x;
+        velocity.x = 0;
+    }
+
+    if(hitBox.x + hitBox.width >= cameraBox.x + cameraBox.width && velocity.x >= -velocity.x) {
+
+        cameraMovement.x = -velocity.x;
+        velocity.x = 0;
     }
 }
 
 void Player::moveCameraY() {
 
-    if((hitBox.y <= cameraBox.y || hitBox.y + hitBox.height >= cameraBox.y + cameraBox.height) && velocity.y != 0) {
+    if(hitBox.y <= cameraBox.y && velocity.y <= 0) {
 
-        object.y -= velocity.y;
-        shouldCameraMove.moveY = true;
+        cameraMovement.y = -velocity.y;
+        velocity.y = 0;
+    }
+
+    if(hitBox.y + hitBox.height >= cameraBox.y + cameraBox.height && velocity.y >= 0) {
+
+        cameraMovement.y = -velocity.y;
+        velocity.y = 0;
     }
 }
 
 void Player::updateCamera() {
-
-    shouldCameraMove = {false, false};
 
     cameraBox = {
 

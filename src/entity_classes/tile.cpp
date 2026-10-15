@@ -23,8 +23,7 @@ void Tile::move(const Vector2 newVelocity) {
 
     velocity = newVelocity;
 
-    object.x += velocity.x;
-    object.y += velocity.y;
+    object <<= velocity * GetFrameTime();
 
     velocity = {0, 0};
 }

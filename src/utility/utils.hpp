@@ -3,6 +3,12 @@
 #include <iostream>
 #include <fstream>
 
+struct ShouldCameraMove {
+
+    bool moveX = false;
+    bool moveY = false;
+};
+
 #define print(x) std::cout << x << '\n'
 #define EMPTY_RECT (Rectangle) {0, 0, 0, 0}
 #define WH_EMPTY_RECT (Rectangle) {0, 0, TILE_SIZE, TILE_SIZE}
@@ -18,6 +24,50 @@
 
 #define STACK_SIZE 255
 
+// 200 Tiles -> World Size
+
+#define WORLD_SIZE 200
+
+// Some C++ operator magic
+
+inline Vector2 operator<<=(Vector2 &v1, const Vector2 &v2) {
+
+    v1.x += v2.x;
+    v1.y += v2.y;
+    return v1;
+}
+
+inline Vector2 operator*(Vector2 vec, const float numf) {
+
+    vec.x *= numf;
+    vec.y *= numf;
+    return vec;
+}
+
+inline Vector2 operator>>=(Vector2 &v1, const Vector2 &v2) {
+
+    v1.x -= v2.x;
+    v1.y -= v2.y;
+    return v1;
+}
+
+inline bool operator!=(const Vector2 &v1, const Vector2 &v2) {
+
+    return (v1.x != v2.x || v1.y != v2.y);
+}
+
+inline bool operator!=(const ShouldCameraMove &shouldMove1, const ShouldCameraMove &shouldMove2) {
+
+    return (shouldMove1.moveX != shouldMove2.moveX || shouldMove1.moveY != shouldMove2.moveY);
+}
+
+inline Rectangle operator<<=(Rectangle &v1, const Vector2 &v2) {
+
+    v1.x += v2.x;
+    v1.y += v2.y;
+    return v1;
+}
+
 struct Input {
 
     bool goingLeft;
@@ -27,11 +77,7 @@ struct Input {
 
 Input getInput();
 
-struct ShouldCameraMove {
 
-    bool moveX = false;
-    bool moveY = false;
-};
 
 enum class FPS_TYPE {
 
@@ -125,10 +171,8 @@ namespace Mouse {
 #define PLAYER_WALK_MAX_FRAMES 8
 
 #define PLAYER_SPEED 500
-#define PLAYER_JUMP_SPEED -2500
-#define GRAVITY 200
-
-// 43, 100
+#define PLAYER_JUMP_SPEED -1000
+#define GRAVITY 1800
 
 #define TILE_WALL_HITBOX_ADJ (Rectangle) {0, 188, 0, -190}
 #define PLAYER_HITBOX_ADJ (Rectangle) {15, 10, -57, 0}

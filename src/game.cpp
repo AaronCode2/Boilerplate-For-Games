@@ -77,7 +77,7 @@ void Game::updateGame() {
 
     handleFps();
 
-    world.update(player.getVelocity(), player.getCameraMoved());
+    world.update(player.getCameraMovement());
     player.update();
 }
 

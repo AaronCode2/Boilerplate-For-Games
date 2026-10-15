@@ -25,7 +25,7 @@ class Game {
         Color backgroundColor = {100, 100, 100, 155};
 
         World world = World();
-        Player player = Player({500, 200, 100, 100}, world.giveTiles());
+        Player player = Player({500, 300, 100, 100}, world.giveTiles());
 
     // thirdparty lib
 

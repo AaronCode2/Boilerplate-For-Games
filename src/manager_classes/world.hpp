@@ -10,7 +10,7 @@ class World {
 
         World();
 
-        void update(const Vector2 playerVelocity, const ShouldCameraMove cameraMovement);
+        void update(const Vector2 cameraMovement);
 
         std::vector<Tile> &giveTiles();
 
@@ -18,7 +18,7 @@ class World {
 
         void dev_tilePlacer();
 
-        void updateTiles(const Vector2 playerVelocity, const ShouldCameraMove cameraMovement);
+        void updateTiles(const Vector2 cameraMovement);
 
         std::vector<Tile> tiles;
 
@@ -33,4 +33,5 @@ class World {
         bool enableTilePlacer = false;
 
         Vector2 worldPos = {0, 0};
+        Vector2 tempWorldVec = {0, 0};
 };

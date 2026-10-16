@@ -6,6 +6,7 @@
 #include "entity_classes/player.hpp"
 #include "utility/textures.hpp"
 #include "manager_classes/world.hpp"
+#include "ui/ui.hpp"
 
 #if DEBUG_ENABLED
     #include "raylib-nuklear.h"
@@ -26,6 +27,7 @@ class Game {
 
         World world = World();
         Player player = Player({500, 300, 100, 100}, world.giveTiles());
+        UI::Button button;
 
     // thirdparty lib
 

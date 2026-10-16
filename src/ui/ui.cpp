@@ -1,31 +1,13 @@
-#include <ui.hpp>
+#include "ui.hpp"
 
 std::map<UI::Button_Type, UI::FrameArea> UI::_buttonMapping;
 
 // When I grow old, I'm gonna go to California for holiday.
 
-enum class UI::Button_Type {
-
-    SMALL_BUTTON_UNACTIVE = 0,
-    SMALL_BUTTON_ACTIVE,
-    LARGE_BUTTON_UNACTIVE,
-    LARGE_BUTTON_ACTIVE,
-    XL_LARGE_BUTTON_UNACTIVE,
-    XL_LARGE_BUTTON_ACTIVE,
-};
-
-enum class UI::Button_State {
-
-    INACTIVE = 0,
-    MOUSE_HOVER,
-    MOUSE_L_CLICKED,
-    MOUSE_R_CLICKED
-};
-
 void UI::init() {
 
-    UI::_buttonMapping[UI::Button_Type::SMALL_BUTTON_UNACTIVE] = {0, 3, 1, 1};
-    UI::_buttonMapping[UI::Button_Type::SMALL_BUTTON_ACTIVE] = {1, 3, 1, 1};
+    UI::_buttonMapping[UI::Button_Type::SMALL_BUTTON_UNACTIVE] = {0, 3};
+    UI::_buttonMapping[UI::Button_Type::SMALL_BUTTON_ACTIVE] = {1, 3};
     
     UI::_buttonMapping[UI::Button_Type::LARGE_BUTTON_UNACTIVE] = {0, 4, 2, 1};
     UI::_buttonMapping[UI::Button_Type::LARGE_BUTTON_ACTIVE] = {1, 4, 2, 1};
@@ -34,10 +16,9 @@ void UI::init() {
     UI::_buttonMapping[UI::Button_Type::XL_LARGE_BUTTON_ACTIVE] = {1, 8, 3, 1};
 }
 
-UI::Button::Button(Button_Type buttonType, Button_State activeState) {
+UI::Button::Button(Button_Type buttonType) {
 
     this->buttonType = buttonType;
-    this->activeState = activeState;
 
     srcRect = {
         Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * _buttonMapping[buttonType].x,
@@ -49,6 +30,8 @@ UI::Button::Button(Button_Type buttonType, Button_State activeState) {
 
 void UI::Button::update(const Vector2 position) {
 
+    handleStates();
+
     object = {
         position.x,
         position.y,
@@ -59,18 +42,21 @@ void UI::Button::update(const Vector2 position) {
     draw();
 }
 
-UI::Button_State UI::Button::getState() {
+bool UI::Button::getState(Button_State wantedState) {
 
-    if(Mouse::isClickedL(object))
-        return Button_State::MOUSE_L_CLICKED;
-    
-    if(Mouse::isClickedR(object))
-        return Button_State::MOUSE_R_CLICKED;
+    switch(wantedState) {
 
-    if(Mouse::isHovering(object))
-        return Button_State::MOUSE_HOVER;
+        case UI::Button_State::MOUSE_L_CLICKED:
+            return Mouse::isClickedL(object);
+        
+        case UI::Button_State::MOUSE_R_CLICKED:
+            return Mouse::isClickedR(object);
+        
+        case UI::Button_State::MOUSE_HOVER:
+            return Mouse::isHovering(object);
+    };
 
-    return Button_State::INACTIVE;
+    return false;
 }
 
 void UI::Button::draw() {
@@ -80,4 +66,23 @@ void UI::Button::draw() {
         srcRect, {object.x, object.y},
         WHITE
     );
+}
+
+void UI::Button::handleStates() {
+
+    if(active) {
+
+        srcRect.x = Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * 
+        _buttonMapping[(Button_Type) (1 + (int) buttonType)].x;
+
+        srcRect.y = Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y * 
+        _buttonMapping[(Button_Type) (1 + (int) buttonType)].y;
+    } else {
+
+        srcRect.x = Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * 
+        _buttonMapping[(Button_Type) (buttonType)].x;
+
+        srcRect.y = Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y * 
+        _buttonMapping[(Button_Type) (buttonType)].y;
+    }
 }

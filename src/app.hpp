@@ -3,6 +3,7 @@
 #include <iostream>
 #include "game.hpp"
 #include "utility/textures.hpp"
+#include "ui/ui.hpp"
 
 
 // Using ENG-US for stuff

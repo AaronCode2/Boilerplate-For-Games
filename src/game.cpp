@@ -5,17 +5,11 @@ Game::Game() {
     SetExitKey(KEY_NULL);
 }
  
-/*! 
-    There maybe be texture that aren't unloaded, if so, report an issue immediately
-    on github, as this is a memory leak and only way to fix is to off the computer
-    or simply unload it. Don't worry about the __linux__ flag.
-!*/
+// I should be revising than doing coding. LOL
 
 Game::~Game() {
 
-#if !__linux__
-    Textures::unloadTextures();
-#endif
+
 }
 
 void Game::updateNK() {
@@ -24,7 +18,9 @@ void Game::updateNK() {
 
         if(
             nk_begin(nk, "THIS", nk_rect(100, 100, 420, 720),
-            NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
+            NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)
+        ) {
+
             nk_layout_row_static(nk, 50, 150, 1);
 
             nk_label(nk, "RECT", NK_TEXT_LEFT);
@@ -79,6 +75,10 @@ void Game::updateGame() {
 
     world.update(player.getCameraMovement());
     player.update();
+
+    button.update(Utils::THE_DEBUG_VECTOR);
+
+    button.active = button.getState(UI::Button_State::MOUSE_HOVER);
 }
 
 void Game::handleFps() {

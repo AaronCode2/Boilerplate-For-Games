@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <map>
+#include <math.h>
 #include "utils.hpp"
 
 enum class ImageIndex {
@@ -26,4 +27,6 @@ namespace Textures {
     extern std::map<ImageIndex, TextureData> texture;
 
     void loadTextures();
+
+    Texture2D getScaledTexture(std::string path, int scale);
 }

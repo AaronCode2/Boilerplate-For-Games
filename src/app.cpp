@@ -32,6 +32,7 @@ void App::setup() {
     UnloadImage(favicon);
 
     Textures::loadTextures();
+    UI::init();
 }
 
 void App::logInfo() {

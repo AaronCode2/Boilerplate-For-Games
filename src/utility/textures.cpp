@@ -18,7 +18,22 @@ void Textures::loadTextures() {
 
     texture[ImageIndex::GUI_PLATE] = {
 
-        LoadTexture(IMAGE_GUI_PLATE_PATH),
+        getScaledTexture(IMAGE_GUI_PLATE_PATH, GUI_SCALE),
         IMAGE_GUI_PLATE_MAX_FRAMES
     };
+}
+
+Texture2D Textures::getScaledTexture(std::string path, int scale) {
+
+    // Using CPU up-scaling
+
+    Image image = LoadImage(path.c_str());
+
+    ImageResize(&image, std::floorf(image.width) * scale, std::floorf(image.height) * scale);
+
+    Texture2D texture = LoadTextureFromImage(image);
+
+    UnloadImage(image);
+
+    return texture;
 }

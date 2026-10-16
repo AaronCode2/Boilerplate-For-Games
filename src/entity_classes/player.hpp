@@ -5,6 +5,7 @@
 #include "tile.hpp"
 #include <raylib.h>
 #include <vector>
+#include <math.h>
 
 class Player : public Sprite {
 

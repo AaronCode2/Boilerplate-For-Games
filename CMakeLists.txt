@@ -36,6 +36,7 @@ SOURCE_FILES
     src/utility/utils.cpp
     src/utility/global_vars.cpp
     src/utility/textures.cpp
+    src/ui/ui.cpp
 )
 
 add_executable(Aaron ${SOURCE_FILES})

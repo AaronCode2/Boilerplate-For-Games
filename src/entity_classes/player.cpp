@@ -35,13 +35,13 @@ void Player::move() {
 
     updateCamera();
 
-    moveCameraX();
     object.x += velocity.x * GetFrameTime();
     collisionX();
+    moveCameraX();
 
-    moveCameraY();
     object.y += velocity.y  * GetFrameTime();
     collisionY();
+    moveCameraY();
 }
 
 void Player::handleAnimation() {
@@ -189,33 +189,51 @@ void Player::collisionY() {
 
 void Player::moveCameraX() {  
 
+    updateHitBox();
+
+    if(hitBox.x + hitBox.width >= cameraBox.x + cameraBox.width && velocity.x >= 0) {
+
+        cameraMovement.x = -velocity.x;
+
+        const float offset = hitBox.x - object.x + hitBox.width; 
+        object.x = cameraBox.x + cameraBox.width - offset;
+    }
+
     if(hitBox.x <= cameraBox.x && velocity.x <= 0) {
 
         cameraMovement.x = -velocity.x;
-        velocity.x = 0;
+
+        const float offset = hitBox.x - object.x;
+        object.x = cameraBox.x - offset;
     }
 
-    if(hitBox.x + hitBox.width >= cameraBox.x + cameraBox.width && velocity.x >= -velocity.x) {
-
-        cameraMovement.x = -velocity.x;
-        velocity.x = 0;
-    }
+    updateHitBox();
 }
 
 void Player::moveCameraY() {
 
-    if(hitBox.y <= cameraBox.y && velocity.y <= 0) {
-
-        cameraMovement.y = -velocity.y;
-        velocity.y = 0;
-    }
+    updateHitBox();
 
     if(hitBox.y + hitBox.height >= cameraBox.y + cameraBox.height && velocity.y >= 0) {
 
         cameraMovement.y = -velocity.y;
-        velocity.y = 0;
+        
+        const float offset = hitBox.y - object.y + hitBox.height; 
+        object.y = cameraBox.y + cameraBox.height - offset;
     }
+
+    if(hitBox.y <= cameraBox.y && velocity.y <= 0) {
+
+        cameraMovement.y = -velocity.y;
+        
+        const float offset = hitBox.y - object.y;
+        object.y = cameraBox.y - offset;
+    }
+
+    updateHitBox();
 }
+
+// Life got a bit dull, coding is the only happiness I get nower days :(
 
 void Player::updateCamera() {
 

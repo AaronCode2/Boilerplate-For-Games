@@ -6,7 +6,8 @@
 enum class ImageIndex {
 
     PLAYER = 0,
-    TILE
+    TILE,
+    GUI_PLATE
 };
 
 struct TextureData {
@@ -25,6 +26,4 @@ namespace Textures {
     extern std::map<ImageIndex, TextureData> texture;
 
     void loadTextures();
-
-    void unloadTextures();
 }

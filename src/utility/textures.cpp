@@ -15,10 +15,10 @@ void Textures::loadTextures() {
         LoadTexture(IMAGE_TILE_PATH),
         IMAGE_TILE_MAX_FRAMES
     };
-}
 
-void Textures::unloadTextures() {
+    texture[ImageIndex::GUI_PLATE] = {
 
-    UnloadTexture(texture[ImageIndex::PLAYER].texture);
-    UnloadTexture(texture[ImageIndex::TILE].texture);
+        LoadTexture(IMAGE_GUI_PLATE_PATH),
+        IMAGE_GUI_PLATE_MAX_FRAMES
+    };
 }

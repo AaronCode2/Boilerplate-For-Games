@@ -35,6 +35,12 @@ void Game::updateNK() {
             nk_label(nk, "VECTOR", NK_TEXT_LEFT);
             Utils::THE_DEBUG_VECTOR.x = nk_slide_float(nk, -400, Utils::THE_DEBUG_VECTOR.x, 400.0f, 1.0f);
             Utils::THE_DEBUG_VECTOR.y = nk_slide_float(nk, -400, Utils::THE_DEBUG_VECTOR.y, 400.0f, 1.0f);
+
+            const char *tileItems[] = {"WALL", "CLOCK", "COUCH", "STAND"};
+
+            nk_combobox(nk, tileItems, 4, &Utils::selectedtileTypeIndex, 20, {100, 100});
+
+            world.setpickedTile((TileType) Utils::selectedtileTypeIndex);
         }
     nk_end(nk);
 }
@@ -58,10 +64,12 @@ void Game::gameLoop() {
 
             ClearBackground(backgroundColor);
 
+
+            updateGame();
+
 #if DEBUG_ENABLED
             drawNK();
 #endif
-            updateGame();
 
         EndDrawing();
     }
@@ -77,6 +85,8 @@ void Game::updateGame() {
 
     world.update(player.getCameraMovement());
     player.update();
+
+    UI::drawBases({Utils::THE_DEBUG_RECT.x, Utils::THE_DEBUG_RECT.y}, {6, 3});
 
     button.update(Utils::THE_DEBUG_VECTOR);
 

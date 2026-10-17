@@ -4,7 +4,7 @@
 #include "utility/global_vars.hpp"
 #include "entity_classes/sprite.hpp"
 #include "entity_classes/player.hpp"
-#include "utility/textures.hpp"
+#include "utility/assets.hpp"
 #include "utility/data.hpp"
 #include "manager_classes/world.hpp"
 #include "ui/ui.hpp"

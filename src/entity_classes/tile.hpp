@@ -1,7 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "sprite.hpp"
-#include "../utility/textures.hpp"
+#include "../utility/assets.hpp"
 #include "../utility/utils.hpp"
 
 class Tile : public Sprite {

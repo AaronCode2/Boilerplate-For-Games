@@ -49,5 +49,5 @@ void Tile::updateHitBox() {
         };
     }
 
-    Utils::debugRect(hitBox);
+    // Utils::debugRect(hitBox);
 }

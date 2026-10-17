@@ -1,7 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <map>
-#include "../utility/textures.hpp"
+#include "../utility/assets.hpp"
 
 namespace UI {
 
@@ -75,11 +75,13 @@ namespace UI {
 
     void _mapGui();
 
-    void drawBase(Vector2 position, Vector2 size, BaseType type = BaseType::NORMAL);
+    void drawBases(const Vector2 position, const Vector2 size, const BaseType type = BaseType::NORMAL);
 
-    void _configureBaseSelection(Vector2 posFrame, Vector2 size, BaseType type = BaseType::NORMAL);
+    void drawSingleBase(const Vector2 position, GuiType type);
 
-    Rectangle _getGuiSrcRect(GuiType type);
+    Rectangle _configureBaseSrcRect(const Vector2 posFrame, Vector2 size, const BaseType type = BaseType::NORMAL);
+
+    Rectangle _getGuiSrcRect(const GuiType type);
 
     // A struct is a class, I use structs for simple data types
 
@@ -92,7 +94,7 @@ namespace UI {
             void update(const Vector2 position);
 
             bool active = false;
-            bool getState(Button_State wantedState);
+            bool getState(const Button_State wantedState);
 
         private:
 

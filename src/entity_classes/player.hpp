@@ -1,7 +1,7 @@
 #pragma once
 #include "sprite.hpp"
 #include "../utility/utils.hpp"
-#include "../utility/textures.hpp"
+#include "../utility/assets.hpp"
 #include "tile.hpp"
 #include <raylib.h>
 #include <vector>

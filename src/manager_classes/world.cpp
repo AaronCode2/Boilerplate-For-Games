@@ -66,12 +66,13 @@ void World::dev_tilePlacer() {
         }
     }
 
+    // Deleting and adding tiles - Tile Editor
 
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 
         for(auto &tile : tiles) {
 
-            if(CheckCollisionPointRec(GetMousePosition(), tile.getObject()))
+            if(CheckCollisionPointRec(GetMousePosition(), tile.getObject()) && pickedTile == tile.getType())
                 return;
         }
 

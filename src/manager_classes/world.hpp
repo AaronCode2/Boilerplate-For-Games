@@ -4,6 +4,8 @@
 #include "../entity_classes/tile.hpp"
 #include <math.h>
 
+// Bored, Bored, Boredom.
+
 class World {
 
     public:
@@ -16,6 +18,8 @@ class World {
 
         Vector2 &getWorldPos_r() { return worldPos; };
         Vector2 getWorldPos() { return worldPos; };
+
+        void setpickedTile(TileType newPickedTile) { pickedTile = newPickedTile; };
 
     private:
 
@@ -31,7 +35,7 @@ class World {
         };
 
         Rectangle tilePlacerRect;
-        TileType pickedTile = TileType::WALL;
+        TileType pickedTile = TileType::COUCH;
         
         bool enableTilePlacer = false;
 

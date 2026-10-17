@@ -128,7 +128,7 @@ void Player::updateHitBox() {
         object.height + PLAYER_HITBOX_ADJ.height,   
     };
 
-    Utils::debugRect(hitBox);
+    // Utils::debugRect(hitBox);
 }
 
 void Player::collisionX() {
@@ -245,5 +245,5 @@ void Player::updateCamera() {
         GetScreenHeight() - CAMERA_BOX_ADJ.height,
     };
 
-    Utils::debugRect(cameraBox);
+    // Utils::debugRect(cameraBox);
 }

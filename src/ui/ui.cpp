@@ -4,6 +4,7 @@ std::map<UI::GuiType, UI::FrameArea> UI::_guiMapping;
 
 // When I grow old, I'm gonna go to California for holiday.
 
+
 void UI::init() {
 
     _mapGui();
@@ -48,71 +49,103 @@ void UI::_mapGui() {
     _guiMapping[GuiType::XL_ORANGE_BUTTON_PRESSED] = {3, 9, 3, 1};
 }
 
-void UI::drawBase(Vector2 position, Vector2 size, BaseType type) {
+void UI::drawBases(const Vector2 position, const Vector2 size, const BaseType type) {
 
+    // Just empty, nothing to do, don't know what to do, kinda lost you know?
 
+    for(float y = 0; y < size.y; y++) {
+        for(float x = 0; x < size.x; x++) {
+
+            const Vector2 singleBasePos = Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize() 
+            * (Vector2) {x, y} + position;
+
+            DrawTextureRec(
+                Textures::texture[ImageIndex::GUI_PLATE].texture,
+                _configureBaseSrcRect({x, y}, size),
+                singleBasePos,
+                WHITE
+            );
+        }
+    }
 }
 
-void UI::_configureBaseSelection(Vector2 posFrame, Vector2 size, BaseType type) {
+void UI::drawSingleBase(const Vector2 position, const GuiType type) {
+
+    DrawTextureRec(
+        Textures::texture[ImageIndex::GUI_PLATE].texture,
+        _getGuiSrcRect(type), position,
+        WHITE
+    );
+}
+
+Rectangle UI::_configureBaseSrcRect(const Vector2 posFrame, const Vector2 size, const BaseType type) {
     
 
-    // TODO: Get srcRect working & redsign button with that
-    // TODO 2: Get the bases working!
+    ////  Get srcRect working & redsign button with that
+    //// Get the bases working!
 
-    // if(type == BaseType::NORMAL) {
-    //     if(posFrame.y == 0 && posFrame.x != 0 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.TOP_MIDDLE)
-    //     elif(posFrame.y == 0 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.CORNER_TOP_RIGHT)
-    //     elif(posFrame.y != 0 && posFrame.x == 0 && y != size.y - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MIDDLE_LEFT_SIDE)
-    //     elif(posFrame.y != 0 && posFrame.x != 0 && y != size.y - 1 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MIDDLE)
-    //     elif(posFrame.y != 0 && y != size.y - 1 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MIDDLE_RIGHT_SIDE)
-    //     elif(posFrame.y == size.y - 1 && posFrame.x == 0)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.CORNER_BOTTOM_LEFT)
-    //     elif(posFrame.y == size.y - 1 && posFrame.x != 0 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.BOTTOM_MIDDLE)
+    // Some very good coding.
 
-    //     elif(posFrame.y == size.y - 1 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.CORNER_BOTTOM_RIGHT)
+    if(type == BaseType::NORMAL) {
 
-    //     return getGuiPlatesSrcRect(utils.GuiPlates.CORNER_TOP_LEFT)
-    // } else {
+        if(posFrame.y == 0 && posFrame.x != 0 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::TOP_MIDDLE);
+        else if(posFrame.y == 0 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::CORNER_TOP_RIGHT);
+        else if(posFrame.y != 0 && posFrame.x == 0 && posFrame.y != size.y - 1)
+            return _getGuiSrcRect(GuiType::MIDDLE_LEFT_SIDE);
+        else if(posFrame.y != 0 && posFrame.x != 0 && posFrame.y != size.y - 1 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::MIDDLE);
+        else if(posFrame.y != 0 && posFrame.y != size.y - 1 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::MIDDLE_RIGHT_SIDE);
+        else if(posFrame.y == size.y - 1 && posFrame.x == 0)
+            return _getGuiSrcRect(GuiType::CORNER_BOTTOM_LEFT);
+        else if(posFrame.y == size.y - 1 && posFrame.x != 0 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::BOTTOM_MIDDLE);
 
-    //     if(posFrame.y == 0 && posFrame.x != 0 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_TOP_MIDDLE)
-    //     elif(posFrame.y == 0 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_CORNER_TOP_RIGHT)
-    //     elif(posFrame.y != 0 && posFrame.x == 0 && y != size.y - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_MIDDLE_LEFT_SIDE)
-    //     elif(posFrame.y != 0 && posFrame.x != 0 && y != size.y - 1 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_MIDDLE)
-    //     elif(posFrame.y != 0 && y != size.y - 1 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_MIDDLE_RIGHT_SIDE)
-    //     elif(posFrame.y == size.y - 1 && posFrame.x == 0)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_CORNER_BOTTOM_LEFT)
-    //     elif(posFrame.y == size.y - 1 && posFrame.x != 0 && posFrame.x != size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_BOTTOM_MIDDLE)
+        else if(posFrame.y == size.y - 1 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::CORNER_BOTTOM_RIGHT);
 
-    //     elif(posFrame.y == size.y - 1 && posFrame.x == size.x - 1)
-    //         return getGuiPlatesSrcRect(utils.GuiPlates.MAR_CORNER_BOTTOM_RIGHT)
+        return _getGuiSrcRect(GuiType::CORNER_TOP_LEFT);
+    } else {
 
-    //     return getGuiPlatesSrcRect(utils.GuiPlates.MAR_CORNER_TOP_LEFT)
-    // }
+        if(posFrame.y == 0 && posFrame.x != 0 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_TOP_MIDDLE);
+        else if(posFrame.y == 0 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_CORNER_TOP_RIGHT);
+        else if(posFrame.y != 0 && posFrame.x == 0 && posFrame.y != size.y - 1)
+            return _getGuiSrcRect(GuiType::MAR_MIDDLE_LEFT_SIDE);
+        else if(posFrame.y != 0 && posFrame.x != 0 && posFrame.y != size.y - 1 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_MIDDLE);
+        else if(posFrame.y != 0 && posFrame.y != size.y - 1 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_MIDDLE_RIGHT_SIDE);
+        else if(posFrame.y == size.y - 1 && posFrame.x == 0)
+            return _getGuiSrcRect(GuiType::MAR_CORNER_BOTTOM_LEFT);
+        else if(posFrame.y == size.y - 1 && posFrame.x != 0 && posFrame.x != size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_BOTTOM_MIDDLE);
+
+        else if(posFrame.y == size.y - 1 && posFrame.x == size.x - 1)
+            return _getGuiSrcRect(GuiType::MAR_CORNER_BOTTOM_RIGHT);
+
+        return _getGuiSrcRect(GuiType::MAR_CORNER_TOP_LEFT);
+    }
+}
+
+Rectangle UI::_getGuiSrcRect(const GuiType type) {
+
+    return {
+        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * _guiMapping[type].x,
+        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y * _guiMapping[type].y,
+        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * _guiMapping[type].width,
+        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y * _guiMapping[type].height
+    };
 }
 
 UI::Button::Button(GuiType buttonType) {
 
     this->buttonType = buttonType;
 
-    srcRect = {
-        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x * _guiMapping[buttonType].x,
-        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y * _guiMapping[buttonType].y,
-        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().x,
-        Textures::texture[ImageIndex::GUI_PLATE].GetFrameSize().y
-    };
+    srcRect = _getGuiSrcRect(buttonType);
 }
 
 void UI::Button::update(const Vector2 position) {
@@ -129,7 +162,7 @@ void UI::Button::update(const Vector2 position) {
     draw();
 }
 
-bool UI::Button::getState(Button_State wantedState) {
+bool UI::Button::getState(const Button_State wantedState) {
 
     switch(wantedState) {
 

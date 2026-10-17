@@ -3,12 +3,6 @@
 #include <iostream>
 #include <fstream>
 
-struct ShouldCameraMove {
-
-    bool moveX = false;
-    bool moveY = false;
-};
-
 #define print(x) std::cout << x << '\n'
 #define EMPTY_RECT (Rectangle) {0, 0, 0, 0}
 #define WH_EMPTY_RECT (Rectangle) {0, 0, TILE_SIZE, TILE_SIZE}
@@ -42,6 +36,20 @@ inline Vector2 operator*(Vector2 vec, const float numf) {
     vec.x *= numf;
     vec.y *= numf;
     return vec;
+}
+
+inline Vector2 operator*(Vector2 vec1, Vector2 vec2) {
+
+    vec1.x *= vec2.x;
+    vec1.y *= vec2.y;
+    return vec1;
+}
+
+inline Vector2 operator+(Vector2 vec1, Vector2 vec2) {
+
+    vec1.x += vec2.x;
+    vec1.y += vec2.y;
+    return vec1;
 }
 
 inline Vector2 operator>>=(Vector2 &v1, const Vector2 &v2) {
@@ -130,6 +138,7 @@ namespace Utils {
 
     extern Rectangle THE_DEBUG_RECT;
     extern Vector2 THE_DEBUG_VECTOR;
+    extern int selectedtileTypeIndex;
 
 #if DEBUG_ENABLED
 

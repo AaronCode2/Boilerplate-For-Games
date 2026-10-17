@@ -1,4 +1,4 @@
-#include "textures.hpp"
+#include "assets.hpp"
 
 std::map<ImageIndex, TextureData> Textures::texture;
 

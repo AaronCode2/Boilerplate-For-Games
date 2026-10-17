@@ -35,7 +35,7 @@ SOURCE_FILES
     src/manager_classes/world.cpp
     src/utility/utils.cpp
     src/utility/global_vars.cpp
-    src/utility/textures.cpp
+    src/utility/assets.cpp
     src/utility/data.cpp
     src/ui/ui.cpp
 )

@@ -15,6 +15,8 @@ class Tile : public Sprite {
 
         Rectangle getHitBox() const { return hitBox; };
 
+        TileType getType() const { return type; };
+
     private:
 
         void draw();

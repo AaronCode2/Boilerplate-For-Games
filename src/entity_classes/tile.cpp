@@ -32,7 +32,7 @@ void Tile::draw() {
 
     DrawTextureRec(
         Textures::texture[ImageIndex::TILE].texture,
-        srcRect, {object.x, object.y},
+        srcRect, {std::floorf(object.x), std::floorf(object.y)},
         WHITE
     );
 }

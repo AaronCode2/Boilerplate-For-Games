@@ -56,11 +56,6 @@ inline bool operator!=(const Vector2 &v1, const Vector2 &v2) {
     return (v1.x != v2.x || v1.y != v2.y);
 }
 
-inline bool operator!=(const ShouldCameraMove &shouldMove1, const ShouldCameraMove &shouldMove2) {
-
-    return (shouldMove1.moveX != shouldMove2.moveX || shouldMove1.moveY != shouldMove2.moveY);
-}
-
 inline Rectangle operator<<=(Rectangle &v1, const Vector2 &v2) {
 
     v1.x += v2.x;
@@ -183,6 +178,9 @@ namespace Mouse {
 #define PLAYER_HITBOX_ADJ (Rectangle) {15, 10, -57, 0}
 #define COL_ADJUST 0.1f
 #define CAMERA_BOX_ADJ (Rectangle) {170, 268, 400, 400}
+
+#define DATA_PATH "../data/dat.json"
+#define JSON_INDENT 4
 
 #if DEBUG_ENABLED
     #define FONT_SIZE_FOR_NUK 20

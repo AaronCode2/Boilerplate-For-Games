@@ -36,6 +36,7 @@ SOURCE_FILES
     src/utility/utils.cpp
     src/utility/global_vars.cpp
     src/utility/textures.cpp
+    src/utility/data.cpp
     src/ui/ui.cpp
 )
 

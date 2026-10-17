@@ -19,6 +19,9 @@ class Player : public Sprite {
         Vector2 getVelocity() const { return velocity; };
         Vector2 getCameraMovement() const { return cameraMovement; };
 
+        Rectangle &getObject_r() { return object; };
+        Rectangle getObject() { return object; };
+
     private:
 
         void draw();

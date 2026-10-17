@@ -14,6 +14,9 @@ class World {
 
         std::vector<Tile> &giveTiles();
 
+        Vector2 &getWorldPos_r() { return worldPos; };
+        Vector2 getWorldPos() { return worldPos; };
+
     private:
 
         void dev_tilePlacer();

@@ -3,13 +3,15 @@
 Game::Game() {
 
     SetExitKey(KEY_NULL);
+
+    data.readData(DataMapIndex::DEV_MAP);
 }
  
 // I should be revising than doing coding. LOL
 
 Game::~Game() {
 
-
+    data.writeData(DataMapIndex::DEV_MAP);
 }
 
 void Game::updateNK() {

@@ -22,21 +22,64 @@ namespace UI {
         MOUSE_R_CLICKED
     };
 
-    enum class Button_Type {
+    enum class BaseType {
 
-        SMALL_BUTTON_UNACTIVE = 0,
-        SMALL_BUTTON_ACTIVE,
-        LARGE_BUTTON_UNACTIVE,
-        LARGE_BUTTON_ACTIVE,
-        XL_LARGE_BUTTON_UNACTIVE,
-        XL_LARGE_BUTTON_ACTIVE,
+        NORMAL = 0,
+        MARGINAL
+    };
+
+    enum class GuiType {
+
+        CORNER_TOP_LEFT = 0,
+        TOP_MIDDLE,
+        CORNER_TOP_RIGHT,
+
+        MIDDLE_LEFT_SIDE,
+        MIDDLE,
+        MIDDLE_RIGHT_SIDE,
+
+        CORNER_BOTTOM_LEFT,
+        BOTTOM_MIDDLE,
+        CORNER_BOTTOM_RIGHT,
+
+        SMALL_BUTTON_UNPRESSED,
+        SMALL_BUTTON_PRESSED,
+
+        LARGE_BUTTON_UNPRESSED,
+        LARGE_BUTTON_PRESSED,
+
+        MAR_CORNER_TOP_LEFT,
+        MAR_TOP_MIDDLE,
+        MAR_CORNER_TOP_RIGHT,
+
+        MAR_MIDDLE_LEFT_SIDE,
+        MAR_MIDDLE,
+        MAR_MIDDLE_RIGHT_SIDE,
+
+        MAR_CORNER_BOTTOM_LEFT,
+        MAR_BOTTOM_MIDDLE,
+        MAR_CORNER_BOTTOM_RIGHT,
+
+        XL_BUTTON_UNPRESSED,
+        XL_BUTTON_PRESSED,
+
+        XL_ORANGE_BUTTON_UNPRESSED,
+        XL_ORANGE_BUTTON_PRESSED
     };
 
     // There's no private members in namespaces
 
-    extern std::map<Button_Type, FrameArea> _buttonMapping;
+    extern std::map<GuiType, FrameArea> _guiMapping;
 
     void init();
+
+    void _mapGui();
+
+    void drawBase(Vector2 position, Vector2 size, BaseType type = BaseType::NORMAL);
+
+    void _configureBaseSelection(Vector2 posFrame, Vector2 size, BaseType type = BaseType::NORMAL);
+
+    Rectangle _getGuiSrcRect(GuiType type);
 
     // A struct is a class, I use structs for simple data types
 
@@ -44,7 +87,7 @@ namespace UI {
 
         public:
 
-            Button(Button_Type buttonType = Button_Type::SMALL_BUTTON_UNACTIVE);
+            Button(GuiType buttonType = GuiType::SMALL_BUTTON_UNPRESSED);
 
             void update(const Vector2 position);
 
@@ -56,7 +99,7 @@ namespace UI {
             void draw();
             void handleStates();
 
-            Button_Type buttonType;
+            GuiType buttonType;
 
             Rectangle srcRect;
             Rectangle object;

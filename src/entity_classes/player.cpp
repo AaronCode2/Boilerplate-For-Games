@@ -36,11 +36,15 @@ void Player::move() {
     updateCamera();
 
     object.x += velocity.x * GetFrameTime();
-    collisionX();
+
+    if(!Utils::hackerMode)
+        collisionX();
     moveCameraX();
 
     object.y += velocity.y  * GetFrameTime();
-    collisionY();
+
+    if(!Utils::hackerMode)
+        collisionY();
     moveCameraY();
 }
 
@@ -88,13 +92,22 @@ void Player::addressInput() {
     cameraMovement = {0, 0};
     velocity.x = 0;
 
+    if(Utils::hackerMode)
+        velocity.y = 0;
+
     if(getInput().goingLeft)
         velocity.x = -PLAYER_SPEED;
     if(getInput().goingRight)
         velocity.x = PLAYER_SPEED;
 
-    if(getInput().isJumping)
+    if(getInput().isJumping && !Utils::hackerMode)
         velocity.y = PLAYER_JUMP_SPEED;
+
+    if(IsKeyDown(KEY_W) && Utils::hackerMode)
+        velocity.y = -PLAYER_SPEED;
+
+    if(IsKeyDown(KEY_S) && Utils::hackerMode)
+        velocity.y = PLAYER_SPEED;
 }
 
 void Player::handleDirection() {
@@ -111,6 +124,9 @@ void Player::handleDirection() {
 }
 
 void Player::applyGravity() {
+
+    if(Utils::hackerMode)
+        return;
 
     if(object.y + object.height <= GetScreenHeight() - 100)
         velocity.y += GRAVITY * GetFrameTime();

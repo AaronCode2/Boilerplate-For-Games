@@ -16,6 +16,8 @@ Game::~Game() {
 
 void Game::updateNK() {
 
+    // See the raylib-nk docs, it will help: https://github.com/Immediate-Mode-UI/Nuklear/wiki/Window 
+
     UpdateNuklear(nk);
 
         if(
@@ -39,6 +41,10 @@ void Game::updateNK() {
             const char *tileItems[] = {"WALL", "CLOCK", "COUCH", "STAND"};
 
             nk_combobox(nk, tileItems, 4, &Utils::selectedtileTypeIndex, 20, {100, 100});
+
+            // Hacker mode, enables for player to go flying
+
+            nk_checkbox_label(nk, "Hacker Mode", &Utils::hackerMode);
 
             world.setpickedTile((TileType) Utils::selectedtileTypeIndex);
         }

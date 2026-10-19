@@ -140,6 +140,8 @@ namespace Utils {
     extern Vector2 THE_DEBUG_VECTOR;
     extern int selectedtileTypeIndex;
 
+    extern bool hackerMode;
+
 #if DEBUG_ENABLED
 
     extern float xdebugingvalue;

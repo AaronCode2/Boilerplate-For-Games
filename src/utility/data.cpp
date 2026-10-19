@@ -4,7 +4,7 @@ Data::Data(std::vector<Tile> &tiles, Rectangle &playerObject, Vector2 &worldPos)
     tiles(tiles), playerObject(playerObject), worldPos(worldPos)    
 {
 
-    // Using camelcase for json files, please do not mess it up
+    // Using camelCase for json files, please do not mess it up
 
     dataMap[DataMapIndex::DEV_MAP] = "devMap";
     dataMap[DataMapIndex::MAP_1] = "map1";

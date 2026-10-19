@@ -13,6 +13,7 @@ Input getInput() {
 int Utils::selectedtileTypeIndex = 0;
 Color const Utils::testColor = {255, 0, 0, 100};
 float Utils::deltaTimeIt = 0.0f;
+bool Utils::hackerMode = false;
 
 #if DEBUG_ENABLED
 

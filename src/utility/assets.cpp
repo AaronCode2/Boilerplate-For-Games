@@ -40,17 +40,18 @@ Texture2D Textures::getScaledTexture(std::string path, int scale) {
 
 std::map<ShaderIndex, Shader> Shaders::shader;
 
-void __stdcall Shaders::loadShaders() {
+void __stdcall Shaders::compileShaders() {
 
     // There is no Vertex shader, we use default raylib vertex, please don't make your own
 
     shader[ShaderIndex::GREYSCALE] = LoadShader(RAYLIB_SHADER, GREYSCALE_FRAG_PATH);
     shader[ShaderIndex::FOG] = LoadShader(RAYLIB_SHADER, FOG_FRAG_PATH);
     shader[ShaderIndex::BLUR] = LoadShader(RAYLIB_SHADER, BLUR_FRAG_PATH);
+    shader[ShaderIndex::BLOOM] = LoadShader(RAYLIB_SHADER, BLOOM_FRAG_PATH);
 }
 
 void AssetsLoader::load() {
 
     Textures::loadTextures();
-    Shaders::loadShaders();
+    Shaders::compileShaders();
 }

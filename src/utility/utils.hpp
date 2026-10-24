@@ -66,6 +66,11 @@ inline bool operator!=(const Vector2 &v1, const Vector2 &v2) {
     return (v1.x != v2.x || v1.y != v2.y);
 }
 
+inline bool operator==(const Vector2 &v1, const Vector2 &v2) {
+
+    return (v1.x == v2.x && v1.y == v2.y);
+}
+
 inline Rectangle operator<<=(Rectangle &v1, const Vector2 &v2) {
 
     v1.x += v2.x;
@@ -199,6 +204,10 @@ namespace Mouse {
 #define GREYSCALE_FRAG_PATH (const char *) "../shaders/greyscale.frag"
 #define FOG_FRAG_PATH (const char *) "../shaders/fog.frag"
 #define BLUR_FRAG_PATH (const char *) "../shaders/blur.frag"
+#define BLOOM_FRAG_PATH (const char *) "../shaders/bloom.frag"
+
+#define HORIZONTAL_VEC (Vector2) {1.0f, 0.0f} 
+#define VERTICAL_VEC (Vector2) {0.0f, 1.0f} 
 
 #define RAYLIB_SHADER 0
 

@@ -11,7 +11,7 @@ void main() {
     
     vec4 textureColor = texture(texture0, fragTexCoord);
     
-    float gray = dot(vec3(textureColor), grey_weights);
+    float grey = dot(vec3(textureColor), grey_weights);
     
-    ouputColor = vec4(gray, gray, gray, textureColor.a);
+    ouputColor = vec4(grey, grey, grey, textureColor.a);
 }

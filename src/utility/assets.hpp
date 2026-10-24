@@ -17,7 +17,8 @@ enum class ShaderIndex {
 
     GREYSCALE = 0,
     FOG,
-    BLUR
+    BLUR,
+    BLOOM
 };
 
 struct TextureData {
@@ -51,5 +52,5 @@ namespace Shaders {
 
     // Using fast calling reg
 
-    void __stdcall  loadShaders();
+    void __stdcall  compileShaders();
 }

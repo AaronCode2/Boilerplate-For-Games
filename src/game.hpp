@@ -32,6 +32,11 @@ class Game {
 
         Data data = Data(world.giveTiles(), player.getObject_r(), world.getWorldPos_r());
 
+        // Think Front and Back Buffers 
+
+        RenderTexture2D screenBuffer = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+        RenderTexture2D processedBuffer = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+
     // thirdparty lib
 
     #if DEBUG_ENABLED

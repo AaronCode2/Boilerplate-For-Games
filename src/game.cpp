@@ -60,7 +60,9 @@ void Game::gameLoop() {
 
     SetTargetFPS(60);
 
-    int screenSizeloc = GetShaderLocation(Shaders::shader[ShaderIndex::BLUR], "screenSize");
+    int locAxis = GetShaderLocation(Shaders::shader[ShaderIndex::BLUR], "axis");
+
+    Vector2 axis = {1.0f, 0.0f};
 
     while(!WindowShouldClose()) {
 
@@ -68,29 +70,93 @@ void Game::gameLoop() {
         updateNK();
 #endif
 
+        // Stuff you want in the shader
+
+        BeginTextureMode(screenBuffer);
+        {
+
+            DrawRectangleRec({800, 600, 100, 100}, RED);
+            DrawRectangleRec({600, 800, 100, 100}, YELLOW);
+        }
+        EndTextureMode();
+        
+        // Horizotal Bluring
+
+        axis = HORIZONTAL_VEC;
+
+        SetShaderValueV(
+            Shaders::shader[ShaderIndex::BLUR],
+            locAxis,
+            &axis, SHADER_UNIFORM_VEC2,
+            1
+        );
+
+        BeginTextureMode(processedBuffer);
+        {
+
+            ClearBackground(BLANK);
+
+            BeginShaderMode(Shaders::shader[ShaderIndex::BLUR]);
+            {
+                
+
+                // You could do some upscaling with this
+
+                DrawTexturePro(
+                    screenBuffer.texture,
+                    {
+                        0, 0, 
+                        (float) screenBuffer.texture.width, 
+                        -(float) screenBuffer.texture.height,
+                    },
+                    Utils::getScreenRect(), {0, 0}, 0.0f,
+                    WHITE
+                );
+            }
+            EndShaderMode();
+        }
+        EndTextureMode();
+
+        // Vertical Bluring
+        
+        axis = VERTICAL_VEC;
+
+        SetShaderValueV(
+            Shaders::shader[ShaderIndex::BLUR],
+            locAxis,
+            &axis, SHADER_UNIFORM_VEC2,
+            1
+        );
+
         BeginDrawing();
+        {
 
             ClearBackground(backgroundColor);
 
-
-            Vector2 screenSize = Utils::getScreenSizeV();
-
-            SetShaderValue(
-                Shaders::shader[ShaderIndex::BLUR], 
-                screenSizeloc, &screenSize, 
-                SHADER_UNIFORM_INT
-            );
-    
             BeginShaderMode(Shaders::shader[ShaderIndex::BLUR]);
+            {
+                DrawTexturePro(
+                    processedBuffer.texture,
+                    {
+                        0, 0, 
+                        (float) processedBuffer.texture.width, 
+                        -(float) processedBuffer.texture.height,
+                    },
+                    Utils::getScreenRect(), {0, 0}, 0.0f,
+                    WHITE
+                );
 
-                updateGame();
-
+            }
             EndShaderMode();
 
-#if DEBUG_ENABLED
-            drawNK();
-#endif
+            // Stuff you don't want in Shader
 
+            updateGame();
+
+#if DEBUG_ENABLED
+    drawNK();
+#endif
+        }   
         EndDrawing();
     }
 

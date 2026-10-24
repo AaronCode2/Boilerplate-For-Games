@@ -123,6 +123,8 @@ bool Utils::isSameXY(const Vector2 aObject, const Vector2 bObject, const Vector2
     );
 }
 
+// These funcs are not used LOL, don't use them, I burrowed code thinking I will use these.
+
 void Utils::collisionActionX(Rectangle &aObject, const Rectangle ahitBox, const Rectangle bHitBox, Vector2 &aVelocity, bool resetVelocity) {
 
     // Double-check Collision #BUG-FIX
@@ -185,6 +187,11 @@ void Utils::collisionActionY(Rectangle &aObject, const Rectangle ahitBox, const 
 Rectangle Utils::getScreenRect() {
 
     return {0, 0, (float) GetScreenWidth(), (float) GetScreenHeight()};
+}
+
+Vector2 Utils::getScreenSizeV() {
+
+    return {(float) GetScreenWidth(), (float) GetScreenHeight()};
 }
 
 Rectangle Utils::THE_DEBUG_RECT = {0, 0, 0, 0};

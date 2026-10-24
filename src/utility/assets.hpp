@@ -11,6 +11,15 @@ enum class ImageIndex {
     GUI_PLATE
 };
 
+// storing both vs and fs together
+
+enum class ShaderIndex {
+
+    GREYSCALE = 0,
+    FOG,
+    BLUR
+};
+
 struct TextureData {
     
     Texture2D texture;
@@ -22,6 +31,11 @@ struct TextureData {
     }
 };
 
+namespace AssetsLoader {
+
+    void load();
+}
+
 namespace Textures {
     
     extern std::map<ImageIndex, TextureData> texture;
@@ -29,4 +43,13 @@ namespace Textures {
     void loadTextures();
 
     Texture2D getScaledTexture(std::string path, int scale);
+}
+
+namespace Shaders {
+
+    extern std::map<ShaderIndex, Shader> shader;
+
+    // Using fast calling reg
+
+    void __stdcall  loadShaders();
 }

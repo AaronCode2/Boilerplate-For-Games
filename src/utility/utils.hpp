@@ -116,7 +116,8 @@ namespace Utils {
 
     extern float deltaTimeIt;
     extern Color const testColor;
-    Rectangle getScreenRect(); 
+    Rectangle getScreenRect();
+    Vector2 getScreenSizeV();
 
     std::string formatZeros(int num, int width);
     extern int fontSize;
@@ -194,6 +195,14 @@ namespace Mouse {
 
 #define DATA_PATH "../data/dat.json"
 #define JSON_INDENT 4
+
+#define GREYSCALE_FRAG_PATH (const char *) "../shaders/greyscale.frag"
+#define FOG_FRAG_PATH (const char *) "../shaders/fog.frag"
+#define BLUR_FRAG_PATH (const char *) "../shaders/blur.frag"
+
+#define RAYLIB_SHADER 0
+
+#define PLAYER_LIGHT_OFFSET (Vector2) {45.0f, -45.0f}
 
 #if DEBUG_ENABLED
     #define FONT_SIZE_FOR_NUK 20

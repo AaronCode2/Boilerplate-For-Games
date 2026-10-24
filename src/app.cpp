@@ -31,7 +31,7 @@ void App::setup() {
     
     UnloadImage(favicon);
 
-    Textures::loadTextures();
+    AssetsLoader::load();
     UI::init();
 }
 

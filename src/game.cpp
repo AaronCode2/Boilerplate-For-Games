@@ -11,7 +11,7 @@ Game::Game() {
 
 Game::~Game() {
 
-    data.writeData(DataMapIndex::DEV_MAP);
+    // data.writeData(DataMapIndex::DEV_MAP);
 }
 
 void Game::updateNK() {
@@ -60,6 +60,8 @@ void Game::gameLoop() {
 
     SetTargetFPS(60);
 
+    int screenSizeloc = GetShaderLocation(Shaders::shader[ShaderIndex::BLUR], "screenSize");
+
     while(!WindowShouldClose()) {
 
 #if DEBUG_ENABLED
@@ -71,7 +73,19 @@ void Game::gameLoop() {
             ClearBackground(backgroundColor);
 
 
-            updateGame();
+            Vector2 screenSize = Utils::getScreenSizeV();
+
+            SetShaderValue(
+                Shaders::shader[ShaderIndex::BLUR], 
+                screenSizeloc, &screenSize, 
+                SHADER_UNIFORM_INT
+            );
+    
+            BeginShaderMode(Shaders::shader[ShaderIndex::BLUR]);
+
+                updateGame();
+
+            EndShaderMode();
 
 #if DEBUG_ENABLED
             drawNK();

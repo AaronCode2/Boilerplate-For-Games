@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <cstddef>
+#include <memory>
 #include <raylib.h>
 #include "utility/global_vars.hpp"
 #include "entity_classes/sprite.hpp"
@@ -32,22 +34,30 @@ class Game {
 
         Data data = Data(world.giveTiles(), player.getObject_r(), world.getWorldPos_r());
 
-        // Think Front and Back Buffers 
+        Texture2D classicImage = LoadTexture("../assets/example/circle.png");
 
-        RenderTexture2D screenBuffer = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
-        RenderTexture2D processedBuffer = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+        RenderTexture2D targetBuffer;
+
+        RenderTexture2D renderbuffers[NUM_OF_FRAME_BUFFERS];
+        
+        void initRenderBuffers();
+
+        void drawTargetBuffer();
+        void handleChainBuffers();
+
+        void gameLoop();
+        void updateGame();
+        void handleFps();
 
     // thirdparty lib
 
-    #if DEBUG_ENABLED
+#if DEBUG_ENABLED
         struct nk_context *nk = InitNuklear(FONT_SIZE_FOR_NUK);
 
         void updateNK();
         void drawNK();
 
-    #endif
+#endif
 
-        void gameLoop();
-        void updateGame();
-        void handleFps();
+
 };

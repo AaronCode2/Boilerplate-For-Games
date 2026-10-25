@@ -18,7 +18,21 @@ enum class ShaderIndex {
     GREYSCALE = 0,
     FOG,
     BLUR,
-    BLOOM
+    BLOOM,
+    DOWN_SAMPLING,
+    UP_SAMPLING
+};
+
+enum class UniformIndex {
+
+    DOWN_SAMPLE_TEXTURE_SIZE = 0,
+    UP_SAMPLE_TEXTURE_SIZE
+};
+
+struct Uniform {
+
+    int loc;
+    void *data;
 };
 
 struct TextureData {
@@ -49,8 +63,11 @@ namespace Textures {
 namespace Shaders {
 
     extern std::map<ShaderIndex, Shader> shader;
+    extern std::map<UniformIndex, Uniform> uniforms;
 
     // Using fast calling reg
 
     void __stdcall  compileShaders();
+
+    void _getUniforms();
 }

@@ -206,10 +206,15 @@ namespace Mouse {
 #define BLUR_FRAG_PATH (const char *) "../shaders/blur.frag"
 #define BLOOM_FRAG_PATH (const char *) "../shaders/bloom.frag"
 
+#define UP_SAMPLING_FRAG_PATH (const char *) "../shaders/up_sampling.frag"
+#define DOWN_SAMPLING_FRAG_PATH (const char *) "../shaders/down_sampling.frag"
+
 #define HORIZONTAL_VEC (Vector2) {1.0f, 0.0f} 
 #define VERTICAL_VEC (Vector2) {0.0f, 1.0f} 
 
 #define RAYLIB_SHADER 0
+
+#define NUM_OF_FRAME_BUFFERS 8
 
 #define PLAYER_LIGHT_OFFSET (Vector2) {45.0f, -45.0f}
 

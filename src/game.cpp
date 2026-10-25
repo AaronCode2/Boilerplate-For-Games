@@ -70,87 +70,10 @@ void Game::gameLoop() {
         updateNK();
 #endif
 
-        // Stuff you want in the shader
-
-        BeginTextureMode(screenBuffer);
-        {
-
-            DrawRectangleRec({800, 600, 100, 100}, RED);
-            DrawRectangleRec({600, 800, 100, 100}, YELLOW);
-        }
-        EndTextureMode();
-        
-        // Horizotal Bluring
-
-        axis = HORIZONTAL_VEC;
-
-        SetShaderValueV(
-            Shaders::shader[ShaderIndex::BLUR],
-            locAxis,
-            &axis, SHADER_UNIFORM_VEC2,
-            1
-        );
-
-        BeginTextureMode(processedBuffer);
-        {
-
-            ClearBackground(BLANK);
-
-            BeginShaderMode(Shaders::shader[ShaderIndex::BLUR]);
-            {
-                
-
-                // You could do some upscaling with this
-
-                DrawTexturePro(
-                    screenBuffer.texture,
-                    {
-                        0, 0, 
-                        (float) screenBuffer.texture.width, 
-                        -(float) screenBuffer.texture.height,
-                    },
-                    Utils::getScreenRect(), {0, 0}, 0.0f,
-                    WHITE
-                );
-            }
-            EndShaderMode();
-        }
-        EndTextureMode();
-
-        // Vertical Bluring
-        
-        axis = VERTICAL_VEC;
-
-        SetShaderValueV(
-            Shaders::shader[ShaderIndex::BLUR],
-            locAxis,
-            &axis, SHADER_UNIFORM_VEC2,
-            1
-        );
-
         BeginDrawing();
         {
 
             ClearBackground(backgroundColor);
-
-            BeginShaderMode(Shaders::shader[ShaderIndex::BLUR]);
-            {
-                DrawTexturePro(
-                    processedBuffer.texture,
-                    {
-                        0, 0, 
-                        (float) processedBuffer.texture.width, 
-                        -(float) processedBuffer.texture.height,
-                    },
-                    Utils::getScreenRect(), {0, 0}, 0.0f,
-                    WHITE
-                );
-
-            }
-            EndShaderMode();
-
-            // Stuff you don't want in Shader
-
             updateGame();
 
 #if DEBUG_ENABLED

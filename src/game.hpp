@@ -9,6 +9,7 @@
 #include "utility/assets.hpp"
 #include "utility/data.hpp"
 #include "manager_classes/world.hpp"
+#include "manager_classes/renderer.hpp"
 #include "ui/ui.hpp"
 
 #if DEBUG_ENABLED
@@ -35,15 +36,10 @@ class Game {
         Data data = Data(world.giveTiles(), player.getObject_r(), world.getWorldPos_r());
 
         Texture2D classicImage = LoadTexture("../assets/example/circle.png");
-
-        RenderTexture2D targetBuffer;
-
-        RenderTexture2D renderbuffers[NUM_OF_FRAME_BUFFERS];
         
-        void initRenderBuffers();
+        Renderer renderer;
 
-        void drawTargetBuffer();
-        void handleChainBuffers();
+        void handleDrawing();
 
         void gameLoop();
         void updateGame();

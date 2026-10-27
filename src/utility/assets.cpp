@@ -60,6 +60,10 @@ void Shaders::_getUniforms() {
 
     uniforms[UniformIndex::DOWN_SAMPLE_TEXTURE_SIZE].loc = GetShaderLocation(shader[ShaderIndex::DOWN_SAMPLING], "textureSize");
     uniforms[UniformIndex::UP_SAMPLE_TEXTURE_SIZE].loc = GetShaderLocation(shader[ShaderIndex::UP_SAMPLING], "textureSize");
+
+    uniforms[UniformIndex::FOG_WINDOW_SIZE].loc = GetShaderLocation(shader[ShaderIndex::FOG], "screenSize");
+    uniforms[UniformIndex::FOG_POS].loc = GetShaderLocation(shader[ShaderIndex::FOG], "position");
+    uniforms[UniformIndex::FOG_TIME].loc = GetShaderLocation(shader[ShaderIndex::FOG], "time");
 }
 
 void AssetsLoader::load() {

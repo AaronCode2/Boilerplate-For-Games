@@ -53,34 +53,47 @@ void Game::updateNK() {
 
 void Game::drawNK() {
 
+#if DEBUG_ENABLED
     DrawNuklear(nk);
+#endif
 }
+
+void Game::handleDrawing() {
+
+    renderer.beginTargetRender();
+    {
+        ClearBackground(backgroundColor);
+        DrawTextureV(classicImage, {400, 100}, WHITE);
+        updateGame();
+    }
+    renderer.endTargetRender();
+
+    renderer.setCurrentShader(ShaderIndex::FOG);
+
+    BeginDrawing();
+    {
+
+        ClearBackground(backgroundColor);
+        
+        renderer.drawTargetWithShader({player.getObject().x, GetScreenHeight() - player.getObject().y});
+
+        drawNK();
+    }   
+    EndDrawing();
+}
+
+
 
 void Game::gameLoop() {
 
     SetTargetFPS(60);
-
-    int locAxis = GetShaderLocation(Shaders::shader[ShaderIndex::BLUR], "axis");
-
-    Vector2 axis = {1.0f, 0.0f};
 
     while(!WindowShouldClose()) {
 
 #if DEBUG_ENABLED
         updateNK();
 #endif
-
-        BeginDrawing();
-        {
-
-            ClearBackground(backgroundColor);
-            updateGame();
-
-#if DEBUG_ENABLED
-    drawNK();
-#endif
-        }   
-        EndDrawing();
+        handleDrawing();
     }
 
     UnloadNuklear(nk);
@@ -90,7 +103,7 @@ void Game::gameLoop() {
 
 void Game::updateGame() {
 
-    handleFps();
+
 
     world.update(player.getCameraMovement());
     player.update();
@@ -100,6 +113,8 @@ void Game::updateGame() {
     button.update(Utils::THE_DEBUG_VECTOR);
 
     button.active = button.getState(UI::Button_State::MOUSE_HOVER);
+
+    handleFps();
 }
 
 void Game::handleFps() {

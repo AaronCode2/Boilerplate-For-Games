@@ -6,7 +6,7 @@ uniform sampler2D texture0;
 // Shaders are a much of maths, I'm not a fan of maths
 
 uniform float time;
-uniform vec2 mousePos;
+uniform vec2 position;
 uniform vec2 screenSize;
 
 out vec4 ouputColor;
@@ -19,8 +19,8 @@ void main() {
 
     // pathogerm, dude this triangle thing again
 
-    const float xDistance = abs((mousePos.x - gl_FragCoord.x) * (mousePos.x - gl_FragCoord.x));
-    const float yDistance = abs((gl_FragCoord.y - mousePos.y) * (gl_FragCoord.y - mousePos.y));
+    const float xDistance = abs((position.x - gl_FragCoord.x) * (position.x - gl_FragCoord.x));
+    const float yDistance = abs((gl_FragCoord.y - position.y) * (gl_FragCoord.y - position.y));
 
     const float distance = sqrt(yDistance + xDistance);
 

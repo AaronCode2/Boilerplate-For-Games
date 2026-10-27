@@ -214,9 +214,11 @@ namespace Mouse {
 
 #define RAYLIB_SHADER 0
 
-#define NUM_OF_FRAME_BUFFERS 8
+#define NUM_OF_RENDER_BUFFERS 8
 
 #define PLAYER_LIGHT_OFFSET (Vector2) {45.0f, -45.0f}
+
+
 
 #if DEBUG_ENABLED
     #define FONT_SIZE_FOR_NUK 20

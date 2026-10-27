@@ -33,6 +33,7 @@ SOURCE_FILES
     src/entity_classes/player.cpp
     src/entity_classes/tile.cpp
     src/manager_classes/world.cpp
+    src/manager_classes/renderer.cpp
     src/utility/utils.cpp
     src/utility/global_vars.cpp
     src/utility/assets.cpp

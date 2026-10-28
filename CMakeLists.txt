@@ -46,14 +46,22 @@ target_link_libraries(Aaron raylib raylib_nuklear nlohmann_json::nlohmann_json)
 
 if(WIN32)
 
+    # Thirdparty library for debugging
+
+    file(COPY "libs/renderdoc/renderdoc.dll" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
     target_sources(Aaron PRIVATE windows/app.rc)
-    target_link_options(Aaron PRIVATE $<$<CONFIG:Release>:-mwindows>)
 elseif(APPLE)
 
     target_link_options(Aaron PRIVATE $<$<CONFIG:Release>:-MACOSX_BUNDLE>)
 endif()
 
-target_compile_definitions(Aaron PUBLIC $<$<CONFIG:Debug>:DEBUG_ENABLED>)
+target_compile_definitions(
+
+    Aaron PUBLIC 
+    $<$<CONFIG:Debug>:DEBUG_ENABLED>
+    $<$<CONFIG:RelWithDebInfo>:DEBUG_ENABLED>
+)
 
 message("Operation Complete! Configured Correctly!")
 

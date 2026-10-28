@@ -1,7 +1,25 @@
 #pragma once
 #include <raylib.h>
 #include <iostream>
+#include <assert.h>
 #include <fstream>
+
+/*
+    Disable this if you don't have RenderDoc installed on your pc.
+    This is just used for debugging purposes. (Only Works on Windows) 
+    Check Json file for more info
+
+    In: #define ENABLE_RENDERDOC true 
+    Replcae with: with #define ENABLE_RENDERDOC false
+*/
+
+#if DEBUG_ENABLED
+
+    #define ENABLE_RENDERDOC true
+#else
+
+    #define ENABLE_RENDERDOC false
+#endif
 
 #define print(x) std::cout << x << '\n'
 #define EMPTY_RECT (Rectangle) {0, 0, 0, 0}
@@ -49,6 +67,20 @@ inline Vector2 operator+(Vector2 vec1, Vector2 vec2) {
 
     vec1.x += vec2.x;
     vec1.y += vec2.y;
+    return vec1;
+}
+
+inline Vector2 operator/(Vector2 vec1, const float num) {
+
+    vec1.x /= num;
+    vec1.y /= num;
+    return vec1;
+}
+
+inline Vector2 operator/=(Vector2 &vec1, const float num) {
+
+    vec1.x /= num;
+    vec1.y /= num;
     return vec1;
 }
 
@@ -148,6 +180,8 @@ namespace Utils {
 
     extern bool hackerMode;
 
+    extern int shaderIndex;
+
 #if DEBUG_ENABLED
 
     extern float xdebugingvalue;
@@ -215,6 +249,7 @@ namespace Mouse {
 #define RAYLIB_SHADER 0
 
 #define NUM_OF_RENDER_BUFFERS 8
+#define TARGET_BUFFER 0
 
 #define PLAYER_LIGHT_OFFSET (Vector2) {45.0f, -45.0f}
 

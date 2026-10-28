@@ -66,21 +66,16 @@ void main() {
 	// 0.125*5 + 0.03125*4 + 0.0625*4 = 1
 
     vec3 downsample;
-
-	// Check if we need to perform Karis average on each block of 4 samples
-	  // We are writing to mip 0, so we need to apply Karis average to each block
-	  // of 4 samples to prevent fireflies (very bright subpixels, leads to pulsating
-	  // artifacts).
 	downsample = e*0.125;                // ok
 	downsample += (a+c+g+i)*0.03125;     // ok
 	downsample += (b+d+f+h)*0.0625;      // ok
 	downsample += (j+k+l+m)*0.125;
 
-    float brightness = dot(downsample, vec3(0.2126, 0.7152, 0.0722));
+    // float brightness = dot(downsample, vec3(0.2126, 0.7152, 0.0722));
 
-    if(brightness < 0.2) {
-        downsample = vec3(0.0);
-    }
+    // if(brightness < 0.2) {
+    //     downsample = vec3(0.0);
+    // }
 
     outputColor = vec4(downsample, textureColor.a);
 }

@@ -14,6 +14,7 @@ int Utils::selectedtileTypeIndex = 0;
 Color const Utils::testColor = {255, 0, 0, 100};
 float Utils::deltaTimeIt = 0.0f;
 bool Utils::hackerMode = false;
+int Utils::shaderIndex = 3;
 
 #if DEBUG_ENABLED
 
@@ -69,11 +70,12 @@ bool Utils::hackerMode = false;
 Font Utils::font;
 int Utils::fontSize;
 
+// Try to not use asserts that often
 
 void Utils::exitApp(const std::string errorInfo) {
 
     CloseWindow();
-    std::cerr << "\033[31m" << errorInfo << '\n';
+    std::cerr << "\033[31m" << errorInfo << "\033[37m" << '\n';
 
     std::ofstream file("errors.log");
 

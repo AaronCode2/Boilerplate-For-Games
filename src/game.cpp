@@ -42,6 +42,9 @@ void Game::updateNK() {
 
             nk_combobox(nk, tileItems, 4, &Utils::selectedtileTypeIndex, 20, {100, 100});
 
+            nk_label(nk, "Shaders", NK_TEXT_LEFT);
+            Utils::shaderIndex = nk_slide_int(nk, 0, Utils::shaderIndex, sizeof(ShaderIndex), 1);
+
             // Hacker mode, enables for player to go flying
 
             nk_checkbox_label(nk, "Hacker Mode", &Utils::hackerMode);
@@ -60,29 +63,43 @@ void Game::drawNK() {
 
 void Game::handleDrawing() {
 
-    renderer.beginTargetRender();
-    {
-        ClearBackground(backgroundColor);
-        DrawTextureV(classicImage, {400, 100}, WHITE);
-        updateGame();
-    }
-    renderer.endTargetRender();
+// This is should be commented out, don't ask why. It the just works: idkh?
+#if ENABLE_RENDERDOC
 
-    renderer.setCurrentShader(ShaderIndex::FOG);
+    // if(RendererDebugger::isRenderDocFrameCapturing())
+    //     RendererDebugger::beginRenderDocCapture();
+
+#endif
 
     BeginDrawing();
     {
+        renderer.beginTargetRender();
+        {
+            // ClearBackground(backgroundColor);
+            DrawTextureV(classicImage, {1000, 100}, WHITE);
+            // updateGame();
+        }
+        renderer.endTargetRender();
+
+        renderer.setCurrentShader(ShaderIndex::BLOOM);
+        renderer.applyShader({player.getObject().x, GetScreenHeight() - player.getObject().y});
+
 
         ClearBackground(backgroundColor);
-        
-        renderer.drawTargetWithShader({player.getObject().x, GetScreenHeight() - player.getObject().y});
+        renderer.drawResult();
 
+#if ENABLE_RENDERDOC
+
+        if(RendererDebugger::isRenderDocFrameCapturing())
+            RendererDebugger::endRenderDocCapture();
+
+#endif
         drawNK();
     }   
     EndDrawing();
+
+
 }
-
-
 
 void Game::gameLoop() {
 
@@ -93,6 +110,7 @@ void Game::gameLoop() {
 #if DEBUG_ENABLED
         updateNK();
 #endif
+
         handleDrawing();
     }
 
@@ -102,8 +120,6 @@ void Game::gameLoop() {
 }
 
 void Game::updateGame() {
-
-
 
     world.update(player.getCameraMovement());
     player.update();

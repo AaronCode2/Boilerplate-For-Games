@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "utility/assets.hpp"
 #include "ui/ui.hpp"
+#include "manager_classes/renderer.hpp"
 
 
 // Using ENG-US for stuff

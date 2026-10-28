@@ -41,6 +41,8 @@ Texture2D Textures::getScaledTexture(std::string path, int scale) {
 std::map<ShaderIndex, Shader> Shaders::shader;
 std::map<UniformIndex, Uniform> Shaders::uniforms;
 
+// Shaders are complied at runtime, no cache / binary shaders used
+
 void __stdcall Shaders::compileShaders() {
 
     // There is no Vertex shader, we use default raylib vertex, please don't make your own
@@ -64,6 +66,8 @@ void Shaders::_getUniforms() {
     uniforms[UniformIndex::FOG_WINDOW_SIZE].loc = GetShaderLocation(shader[ShaderIndex::FOG], "screenSize");
     uniforms[UniformIndex::FOG_POS].loc = GetShaderLocation(shader[ShaderIndex::FOG], "position");
     uniforms[UniformIndex::FOG_TIME].loc = GetShaderLocation(shader[ShaderIndex::FOG], "time");
+
+    uniforms[UniformIndex::BLUR_AXIS].loc = GetShaderLocation(shader[ShaderIndex::BLUR], "axis");
 }
 
 void AssetsLoader::load() {

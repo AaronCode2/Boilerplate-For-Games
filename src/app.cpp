@@ -1,7 +1,10 @@
 #include "App.hpp"
+
 #if DEBUG_ENABLED
-    #define RAYLIB_NUKLEAR_IMPLEMENTATION
-    #include "raylib-nuklear.h"
+
+#define RAYLIB_NUKLEAR_IMPLEMENTATION
+#include "raylib-nuklear.h"
+
 #endif
 
 // I love Programing! Yeah 
@@ -15,6 +18,12 @@ void App::launch() {
 }
 
 void App::setup() {
+
+#if ENABLE_RENDERDOC
+
+    RendererDebugger::loadRenderDoc();
+
+#endif
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(1440, 730, "Unamed Game");

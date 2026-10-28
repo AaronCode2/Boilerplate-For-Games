@@ -30,7 +30,9 @@ enum class UniformIndex {
 
     FOG_WINDOW_SIZE,
     FOG_POS,
-    FOG_TIME
+    FOG_TIME,
+
+    BLUR_AXIS
 };
 
 struct Uniform {

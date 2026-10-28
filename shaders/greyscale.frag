@@ -1,5 +1,7 @@
 #version 420 core
 
+// Use max of only 16 vec4s, no more!
+
 in vec2 fragTexCoord;
 uniform sampler2D texture0;
 

@@ -34,6 +34,8 @@ void main() {
 
     float wieghtSum = weights[0];
 
+    // This is the best bluring, clumps performance really quickly. 
+
     for(int x = 0; x <= 8; x++) {
 
         vec2 offset = vec2(axis * float(x)) * texelSize;

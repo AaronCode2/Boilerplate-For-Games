@@ -155,6 +155,8 @@ void Renderer::applyShader(Vector2 playerVelArg) {
             break;
         }
 
+        // Avoid using small circles.
+
         case ShaderIndex::BLOOM_FŬSI: {
 
             // Apply affects on second buffer
@@ -170,34 +172,15 @@ void Renderer::applyShader(Vector2 playerVelArg) {
             }
             EndBlendMode();
 
-            BeginBlendMode(BLEND_ADDITIVE);
-            {
-                BeginTextureMode(renderBuffers[1]);
-                {
-                    DrawTextureRec(
-                        renderBuffers[TARGET_BUFFER].texture,
-                        {
-                            0, 0,
-                            (float) renderBuffers[1].texture.width,
-                            -(float) renderBuffers[1].texture.height
-                        },
-                        {0, 0},
-                        WHITE
-                    );
-                }   
-                EndTextureMode();
-            }
-            EndBlendMode();
+            // Render with exposure
 
             BeginTextureMode(renderBuffers[TARGET_BUFFER]);
             {
+               
                 ClearBackground(BLACK);
-
-                // Latin for spread of distance.
-
+                // Latin for spread of distance.     
                 BeginShaderMode(Shaders::shader[ShaderIndex::BLOOM_FŬSI]);
                 {
-
                     DrawTexturePro(
                         renderBuffers[1].texture,
                         {
@@ -208,7 +191,7 @@ void Renderer::applyShader(Vector2 playerVelArg) {
                         {
                             0, 0,
                             (float) renderBuffers[TARGET_BUFFER].texture.width,
-                            -(float) renderBuffers[TARGET_BUFFER].texture.height  
+                            -(float) renderBuffers[TARGET_BUFFER].texture.height
                         },
                         {0, 0}, 0.0f,
                         WHITE
@@ -217,6 +200,7 @@ void Renderer::applyShader(Vector2 playerVelArg) {
                 EndShaderMode();
             }
             EndTextureMode();
+
 
             break;
         }
@@ -255,6 +239,7 @@ void Renderer::drawResult() {
         }, {0, 0}, 
         WHITE
     );
+
 }
 
 void Renderer::applyShaderToBuffer(int inputBuffer, int outputBuffer) {
@@ -535,8 +520,8 @@ void Renderer::upSampleBuffer(int inputBuffer, int outputBuffer) {
         Shaders::uniforms[UniformIndex::UP_SAMPLE_TEXTURE_SIZE].loc,
         Shaders::uniforms[UniformIndex::UP_SAMPLE_TEXTURE_SIZE].data,
         SHADER_UNIFORM_VEC2, 1
-    );
-    
+    );                                                          
+
     BeginTextureMode(renderBuffers[outputBuffer]);
     {
         BeginShaderMode(Shaders::shader[ShaderIndex::UP_SAMPLING]);

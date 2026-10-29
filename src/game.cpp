@@ -73,20 +73,35 @@ void Game::handleDrawing() {
 
     BeginDrawing();
     {
+        ClearBackground(BLACK);
+
+        updateGame();
+
+        BeginBlendMode(BLEND_ADDITIVE);
+        {
+            
+            DrawTextureV(classicImage, {1800, 100}, WHITE);
+            renderer.drawResult();
+        }
+        EndBlendMode();
+
         renderer.beginTargetRender();
         {
             ClearBackground(BLACK);
-            DrawTextureV(classicImage, {1000, 100}, WHITE);
-            // updateGame();
+            
+            DrawTextureV(classicImage, {800, 800}, WHITE);
+            handleFps();
         }
         renderer.endTargetRender();
 
-        renderer.setCurrentShader(ShaderIndex::BLOOM_FŬSI);
+        renderer.setCurrentShader((ShaderIndex) Utils::shaderIndex);
         renderer.applyShader({player.getObject().x, GetScreenHeight() - player.getObject().y});
+
+        // removes black overlay
+
+
+
         
-        ClearBackground(backgroundColor);
-        renderer.drawResult();
-        DrawTextureV(classicImage, {1800, 100}, WHITE);
 
 #if ENABLE_RENDERDOC
 
@@ -112,6 +127,7 @@ void Game::gameLoop() {
 #endif
 
         handleDrawing();
+        
     }
 
     UnloadNuklear(nk);
@@ -130,7 +146,7 @@ void Game::updateGame() {
 
     button.active = button.getState(UI::Button_State::MOUSE_HOVER);
 
-    handleFps();
+
 }
 
 void Game::handleFps() {

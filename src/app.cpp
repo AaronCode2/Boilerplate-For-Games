@@ -26,7 +26,7 @@ void App::setup() {
 #endif
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(1440, 730, "Unamed Game");
+    InitWindow(800, 800, "Unamed Game");
     Image favicon = LoadImage("../assets/icon/favicon.png");
 
     // Sometimes it doesn't work don't know why?

@@ -75,18 +75,18 @@ void Game::handleDrawing() {
     {
         renderer.beginTargetRender();
         {
-            // ClearBackground(backgroundColor);
+            ClearBackground(BLACK);
             DrawTextureV(classicImage, {1000, 100}, WHITE);
             // updateGame();
         }
         renderer.endTargetRender();
 
-        renderer.setCurrentShader(ShaderIndex::BLOOM);
+        renderer.setCurrentShader(ShaderIndex::BLOOM_FŬSI);
         renderer.applyShader({player.getObject().x, GetScreenHeight() - player.getObject().y});
-
-
+        
         ClearBackground(backgroundColor);
         renderer.drawResult();
+        DrawTextureV(classicImage, {1800, 100}, WHITE);
 
 #if ENABLE_RENDERDOC
 

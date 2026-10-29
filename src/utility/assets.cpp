@@ -50,7 +50,7 @@ void __stdcall Shaders::compileShaders() {
     shader[ShaderIndex::GREYSCALE] = LoadShader(RAYLIB_SHADER, GREYSCALE_FRAG_PATH);
     shader[ShaderIndex::FOG] = LoadShader(RAYLIB_SHADER, FOG_FRAG_PATH);
     shader[ShaderIndex::BLUR] = LoadShader(RAYLIB_SHADER, BLUR_FRAG_PATH);
-    shader[ShaderIndex::BLOOM] = LoadShader(RAYLIB_SHADER, BLOOM_FRAG_PATH);
+    shader[ShaderIndex::BLOOM_FŬSI] = LoadShader(RAYLIB_SHADER, BLOOM_FŬSI_FRAG_PATH);
 
     shader[ShaderIndex::DOWN_SAMPLING] = LoadShader(RAYLIB_SHADER, DOWN_SAMPLING_FRAG_PATH);
     shader[ShaderIndex::UP_SAMPLING] = LoadShader(RAYLIB_SHADER, UP_SAMPLING_FRAG_PATH);

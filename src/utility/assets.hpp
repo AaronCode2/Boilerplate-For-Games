@@ -18,7 +18,7 @@ enum class ShaderIndex {
     GREYSCALE = 0,
     FOG,
     BLUR,
-    BLOOM,
+    BLOOM_FŬSI,
     DOWN_SAMPLING,
     UP_SAMPLING
 };

@@ -12,18 +12,22 @@
 uniform sampler2D texture0;
 in vec2 fragTexCoord;
 
+uniform vec2 textureSize; 
+
 out vec4 outputColor;
 
 void main() {
 
     // Up sampling
 
-    const float filterRadius = 4.5;
+    const float filterRadius = 0.003;
 
     const vec4 textureColor = texture(texture0, fragTexCoord);
     
-	float x = filterRadius;
-	float y = filterRadius;
+    vec2 srcTexelSize = 1.0 / textureSize;
+
+	float x = srcTexelSize.x;
+	float y = srcTexelSize.y;
 
 	// Take 9 samples around current texel:
 	// a - b - c

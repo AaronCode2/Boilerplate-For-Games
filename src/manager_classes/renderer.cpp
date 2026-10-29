@@ -73,7 +73,7 @@ void Renderer::setCurrentShader(const ShaderIndex newCurrentShader) {
 }
 
 // The playerVel is optional, only use for shaders that need it.
-void Renderer::applyShader(Vector2 playerVel_arg) {
+void Renderer::applyShader(Vector2 playerVelArg) {
 
     switch(currentShader) {
 
@@ -84,7 +84,9 @@ void Renderer::applyShader(Vector2 playerVel_arg) {
 
         case ShaderIndex::FOG: {
 
-            Shaders::uniforms[UniformIndex::FOG_POS].data = &playerVel_arg;
+            // If you don't know what a buffer is: It's just a temp pool of memory used to do stuff.
+
+            Shaders::uniforms[UniformIndex::FOG_POS].data = &playerVelArg;
 
             SetShaderValueV(
                 Shaders::shader[ShaderIndex::FOG],
@@ -153,15 +155,13 @@ void Renderer::applyShader(Vector2 playerVel_arg) {
             break;
         }
 
-        case ShaderIndex::BLOOM: {
+        case ShaderIndex::BLOOM_FŬSI: {
 
             // Apply affects on second buffer
             copyBuffer(TARGET_BUFFER, 1);
 
             for(int i = 1; i < NUM_OF_RENDER_BUFFERS - 1; i++)
                 downSampleBuffer(i, i + 1);
-
-            //  i = 5,
 
             BeginBlendMode(BLEND_ADDITIVE);
             {
@@ -172,28 +172,50 @@ void Renderer::applyShader(Vector2 playerVel_arg) {
 
             BeginBlendMode(BLEND_ADDITIVE);
             {
-                upSampleBuffer(NUM_OF_RENDER_BUFFERS - 1, TARGET_BUFFER);
-            }
-            EndBlendMode();
-
-            BeginTextureMode(renderBuffers[0]);
-            {
-                // ClearBackground(BLACK);
-                BeginShaderMode(Shaders::shader[ShaderIndex::BLOOM]);
+                BeginTextureMode(renderBuffers[1]);
                 {
                     DrawTextureRec(
-                        renderBuffers[0].texture,
+                        renderBuffers[TARGET_BUFFER].texture,
                         {
                             0, 0,
-                            (float) renderBuffers[0].texture.width,
-                            (float) -renderBuffers[0].texture.height
+                            (float) renderBuffers[1].texture.width,
+                            -(float) renderBuffers[1].texture.height
                         },
                         {0, 0},
                         WHITE
                     );
                 }   
+                EndTextureMode();
+            }
+            EndBlendMode();
+
+            BeginTextureMode(renderBuffers[TARGET_BUFFER]);
+            {
+                ClearBackground(BLACK);
+
+                // Latin for spread of distance.
+
+                BeginShaderMode(Shaders::shader[ShaderIndex::BLOOM_FŬSI]);
+                {
+
+                    DrawTexturePro(
+                        renderBuffers[1].texture,
+                        {
+                            0, 0,
+                            (float) renderBuffers[1].texture.width,
+                            -(float) renderBuffers[1].texture.height                        
+                        },
+                        {
+                            0, 0,
+                            (float) renderBuffers[TARGET_BUFFER].texture.width,
+                            -(float) renderBuffers[TARGET_BUFFER].texture.height  
+                        },
+                        {0, 0}, 0.0f,
+                        WHITE
+                    );
+                }
                 EndShaderMode();
-            }   
+            }
             EndTextureMode();
 
             break;
@@ -210,7 +232,7 @@ void Renderer::drawResult() {
         return;
     }
 
-    if(currentShader == ShaderIndex::BLOOM) {
+    if(currentShader == ShaderIndex::BLOOM_FŬSI) {
 
         DrawTextureRec(
             renderBuffers[TARGET_BUFFER].texture,
@@ -235,9 +257,9 @@ void Renderer::drawResult() {
     );
 }
 
-void Renderer::applyShaderToBuffer(int inputBuffer, int ouputBuffer) {
+void Renderer::applyShaderToBuffer(int inputBuffer, int outputBuffer) {
 
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
 
         BeginShaderMode(Shaders::shader[currentShader]);
@@ -274,69 +296,75 @@ void Renderer::applyShaderToTarget() {
     EndShaderMode();
 }
 
-RenderTexture2D Renderer::LoadHDRRender(Vector2 size) {
+// Doesn't require HDR monitors.
 
-    RenderTexture2D tempBuffer = {0};
+RenderTexture2D Renderer::LoadHDRRender( int width, int height ) {
 
-    // Generate new buffer
+    RenderTexture2D target = { 0 };
 
-    tempBuffer.id = rlLoadFramebuffer();
+    target.id = rlLoadFramebuffer(); // Load an empty framebuffer
 
-    rlEnableFramebuffer(tempBuffer.id);
+    if ( target.id > 0 ) {
+        rlEnableFramebuffer( target.id );
 
-    // This like advanced encoding and decoding - I don't understand half of this stuff
-    
-    //! WARNING: WHEN ON FULLSCREEN, IF THE SOMETHING IS NOT RIGHT, YOU CAN CAUSE A BLUE SCREEN.
+        // Create color texture (default to RGBA)
+        target.texture.id = rlLoadTexture(
+            NULL,
+            width,
+            height,
+            PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,
+            1
+        );
+        target.texture.width = width;
+        target.texture.height = height;
+        target.texture.format = PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
+        target.texture.mipmaps = 1;
 
-    tempBuffer.texture.id = rlLoadTexture(
-        NULL, 
-        (int) size.x, 
-        (int) size.y,
-        PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,
-        1
-    );
+        // Create depth renderbuffer/texture
+        target.depth.id = rlLoadTextureDepth( width, height, true );
+        target.depth.width = width;
+        target.depth.height = height;
+        target.depth.format = 19; // DEPTH_COMPONENT_24BIT?
+        target.depth.mipmaps = 1;
 
-    tempBuffer.texture.width = (int) size.x;
-    tempBuffer.texture.height = (int) size.y;
-    tempBuffer.texture.format = PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
-    tempBuffer.texture.mipmaps = 1;
+        // Attach color texture and depth renderbuffer/texture to FBO
+        rlFramebufferAttach(
+            target.id,
+            target.texture.id,
+            RL_ATTACHMENT_COLOR_CHANNEL0,
+            RL_ATTACHMENT_TEXTURE2D,
+            0
+        );
+        rlFramebufferAttach(
+            target.id,
+            target.depth.id,
+            RL_ATTACHMENT_DEPTH,
+            RL_ATTACHMENT_RENDERBUFFER,
+            0
+        );
 
-    tempBuffer.depth.id = rlLoadTextureDepth((int) size.x, (int) size.y, true);
-    tempBuffer.depth.width = (int) size.x;
-    tempBuffer.depth.height = (int) size.y;
-    tempBuffer.depth.format = 19;
-    tempBuffer.depth.mipmaps = 1;
+        // Check if fbo is complete with attachments (valid)
+        if (rlFramebufferComplete( target.id ))
+            TRACELOG(
+                LOG_INFO,
+                "FBO: [ID %i] Framebuffer object created successfully",
+                target.id
+            );
 
-    rlFramebufferAttach(
-        tempBuffer.id,
-        tempBuffer.texture.id,
-        RL_ATTACHMENT_COLOR_CHANNEL0,
-        RL_ATTACHMENT_TEXTURE2D,
-        0
-    );
+        rlDisableFramebuffer();
+    } else
+        TRACELOG( LOG_WARNING, "FBO: Framebuffer object can not be created" );
 
-    rlFramebufferAttach(
-        tempBuffer.id,
-        tempBuffer.depth.id,
-        RL_ATTACHMENT_DEPTH,
-        RL_ATTACHMENT_RENDERBUFFER,
-        0
-    );
+    // AHHHHHHHHHHHHHHHHHHHHHHHH
+    SetTextureFilter( target.texture, TEXTURE_FILTER_BILINEAR );
+    SetTextureWrap( target.texture, TEXTURE_WRAP_CLAMP );
 
-    if(!rlFramebufferComplete(tempBuffer.id))
-        Utils::exitApp("Could Not Create Custom Buffer (DEV'S FAULT)");
-
-    rlDisableFramebuffer();
-
-    SetTextureFilter(tempBuffer.texture, TEXTURE_FILTER_BILINEAR);
-    SetTextureWrap(tempBuffer.texture, TEXTURE_WRAP_CLAMP);
-
-    return tempBuffer;
+    return target;
 }
 
-void Renderer::blendBuffers(int inputBuffer1, int inputBuffer2, int ouputBuffer) {
+void Renderer::blendBuffers(int inputBuffer1, int inputBuffer2, int outputBuffer) {
 
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
 
         // The texture.height it negative since OpenGL flips y-axis. LOL
@@ -373,36 +401,63 @@ void Renderer::initBuffers() {
 
     Vector2 bufferSize = Utils::getScreenSizeV() / 2.0f;
 
-    for(int i = 1; i < NUM_OF_RENDER_BUFFERS - 1; i++) {
+    for(int i = 1; i < NUM_OF_RENDER_BUFFERS; i++) {
 
-        renderBuffers[i] = LoadRenderTexture(bufferSize.x, bufferSize.y);
+        renderBuffers[i] = LoadHDRRender(bufferSize.x, bufferSize.y);
 
         bufferSize /= 2.0f;
     }
-
-    renderBuffers[NUM_OF_RENDER_BUFFERS - 1] = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
 }
 
-void Renderer::copyBuffer(int inputBuffer, int ouputBuffer) {
+void Renderer::copyBuffer(int inputBuffer, int outputBuffer) {
 
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
-        DrawTextureRec(
+        DrawTexturePro(
             renderBuffers[inputBuffer].texture,
             {
+                0, 0,
+                (float) renderBuffers[inputBuffer].texture.width,
+                -(float) renderBuffers[inputBuffer].texture.height
+            },
+            {
                 0, 0, 
-                (float) renderBuffers[ouputBuffer].texture.width, 
-                -(float) renderBuffers[ouputBuffer].texture.height
-            }, {0, 0}, 
+                (float) renderBuffers[outputBuffer].texture.width, 
+                -(float) renderBuffers[outputBuffer].texture.height
+            }, 
+            {0, 0}, 0.0f,
             WHITE
         );
     }
     EndTextureMode();
 }
 
-void Renderer::copyBufferWithDifferentSizes(int inputBuffer, int ouputBuffer) {
+void Renderer::copyBufferWithBrightness(int inputBuffer, int outputBuffer) {
 
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    BeginTextureMode(renderBuffers[outputBuffer]);
+    {
+        DrawTexturePro(
+            renderBuffers[inputBuffer].texture,
+            {
+                0, 0,
+                (float) renderBuffers[inputBuffer].texture.width,
+                -(float) renderBuffers[inputBuffer].texture.height
+            },
+            {
+                0, 0, 
+                (float) renderBuffers[outputBuffer].texture.width, 
+                -(float) renderBuffers[outputBuffer].texture.height
+            }, 
+            {0, 0}, 0.0f,
+            ColorBrightness(WHITE, 0.0f)
+        );
+    }
+    EndTextureMode();
+}
+
+void Renderer::copyBufferWithDifferentSizes(int inputBuffer, int outputBuffer) {
+
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
         DrawTexturePro(
             renderBuffers[inputBuffer].texture,
@@ -413,8 +468,8 @@ void Renderer::copyBufferWithDifferentSizes(int inputBuffer, int ouputBuffer) {
             },
             {
                 0, 0, 
-                (float) renderBuffers[ouputBuffer].texture.width, 
-                -(float) renderBuffers[ouputBuffer].texture.height
+                (float) renderBuffers[outputBuffer].texture.width, 
+                -(float) renderBuffers[outputBuffer].texture.height
             }, 
             {0, 0}, 0.0f,
             WHITE
@@ -423,13 +478,11 @@ void Renderer::copyBufferWithDifferentSizes(int inputBuffer, int ouputBuffer) {
     EndTextureMode();
 }
 
-void Renderer::downSampleBuffer(int inputBuffer, int ouputBuffer) {
-
-    return;
+void Renderer::downSampleBuffer(int inputBuffer, int outputBuffer) {
 
     Vector2 bufferSize = {
-        (float)  renderBuffers[ouputBuffer].texture.width,
-        (float) renderBuffers[ouputBuffer].texture.height
+        (float)  renderBuffers[outputBuffer].texture.width,
+        (float) renderBuffers[outputBuffer].texture.height
     };
 
     Shaders::uniforms[UniformIndex::DOWN_SAMPLE_TEXTURE_SIZE].data = &bufferSize;
@@ -441,7 +494,7 @@ void Renderer::downSampleBuffer(int inputBuffer, int ouputBuffer) {
         SHADER_UNIFORM_VEC2, 1
     );
 
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
         ClearBackground(BLACK);
         BeginShaderMode(Shaders::shader[ShaderIndex::DOWN_SAMPLING]);
@@ -455,8 +508,8 @@ void Renderer::downSampleBuffer(int inputBuffer, int ouputBuffer) {
                 },
                 {
                     0, 0,
-                    (float) renderBuffers[ouputBuffer].texture.width,
-                    (float) renderBuffers[ouputBuffer].texture.height,
+                    (float) renderBuffers[outputBuffer].texture.width,
+                    (float) renderBuffers[outputBuffer].texture.height,
                 }, {0, 0}, 0.0f,
                 WHITE
             );
@@ -466,11 +519,13 @@ void Renderer::downSampleBuffer(int inputBuffer, int ouputBuffer) {
     EndTextureMode();
 }
 
-void Renderer::upSampleBuffer(int inputBuffer, int ouputBuffer) {
+void Renderer::upSampleBuffer(int inputBuffer, int outputBuffer) {
+
+    // We use filter radius instead of bufferSize
 
     Vector2 bufferSize = {
-        (float) renderBuffers[ouputBuffer].texture.width,
-        (float) renderBuffers[ouputBuffer].texture.height
+        (float)  renderBuffers[outputBuffer].texture.width,
+        (float) renderBuffers[outputBuffer].texture.height
     };
 
     Shaders::uniforms[UniformIndex::UP_SAMPLE_TEXTURE_SIZE].data = &bufferSize;
@@ -481,8 +536,8 @@ void Renderer::upSampleBuffer(int inputBuffer, int ouputBuffer) {
         Shaders::uniforms[UniformIndex::UP_SAMPLE_TEXTURE_SIZE].data,
         SHADER_UNIFORM_VEC2, 1
     );
-
-    BeginTextureMode(renderBuffers[ouputBuffer]);
+    
+    BeginTextureMode(renderBuffers[outputBuffer]);
     {
         BeginShaderMode(Shaders::shader[ShaderIndex::UP_SAMPLING]);
         {
@@ -495,9 +550,10 @@ void Renderer::upSampleBuffer(int inputBuffer, int ouputBuffer) {
                 },
                 {
                     0, 0,
-                    (float) renderBuffers[ouputBuffer].texture.width,
-                    (float) renderBuffers[ouputBuffer].texture.height,
-                }, {0, 0}, 0.0f,
+                    (float) renderBuffers[outputBuffer].texture.width,
+                    (float) renderBuffers[outputBuffer].texture.height,
+                }, 
+                {0, 0}, 0.0f,
                 WHITE
             );
         }

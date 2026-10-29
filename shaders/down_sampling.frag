@@ -71,9 +71,9 @@ void main() {
 	downsample += (b+d+f+h)*0.0625;      // ok
 	downsample += (j+k+l+m)*0.125;
 
-    // float brightness = dot(downsample, vec3(0.2126, 0.7152, 0.0722));
+    float brightness = dot(downsample, vec3(0.2126, 0.7152, 0.0722));
 
-    // if(brightness < 0.2) {
+    // if(brightness < 0.01) {
     //     downsample = vec3(0.0);
     // }
 

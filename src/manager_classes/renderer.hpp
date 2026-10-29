@@ -51,7 +51,7 @@ class Renderer {
         void beginTargetRender() const { BeginTextureMode(renderBuffers[TARGET_BUFFER]); };
         void endTargetRender() const { EndTextureMode(); };
 
-        void applyShader(Vector2 playerVel_arg = {0, 0});
+        void applyShader(Vector2 playerVelArg = {0, 0});
 
         void drawResult();
 
@@ -59,23 +59,24 @@ class Renderer {
 
     private:
 
-        void applyShaderToBuffer(int inputBuffer = 0, int ouputBuffer = 1);
+        void applyShaderToBuffer(int inputBuffer = 0, int outputBuffer = 1);
 
         // Skips using mulitple buffers and just draws -> Gain Performance, when using low-end shaders
         void applyShaderToTarget();
 
-        RenderTexture2D LoadHDRRender(Vector2 size);
+        RenderTexture2D LoadHDRRender(int width, int height);
 
-        void blendBuffers(int inputBuffer1, int inputBuffer2, int ouputBuffer);
+        void blendBuffers(int inputBuffer1, int inputBuffer2, int outputBuffer);
 
         void initBuffers();
 
         void copyBuffer(int inputBuffer, int outputBuffer);
+        void copyBufferWithBrightness(int inputBuffer, int outputBuffer);
 
-        void copyBufferWithDifferentSizes(int inputBuffer, int ouputBuffer);
+        void copyBufferWithDifferentSizes(int inputBuffer, int outputBuffer);
 
-        void downSampleBuffer(int inputBuffer, int ouputBuffer);
-        void upSampleBuffer(int inputBuffer, int ouputBuffer);
+        void downSampleBuffer(int inputBuffer, int outputBuffer);
+        void upSampleBuffer(int inputBuffer, int outputBuffer);
 
         bool applyShaderDirectly = false;
 

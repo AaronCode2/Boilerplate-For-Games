@@ -238,7 +238,7 @@ namespace Mouse {
 #define GREYSCALE_FRAG_PATH (const char *) "../shaders/greyscale.frag"
 #define FOG_FRAG_PATH (const char *) "../shaders/fog.frag"
 #define BLUR_FRAG_PATH (const char *) "../shaders/blur.frag"
-#define BLOOM_FRAG_PATH (const char *) "../shaders/bloom.frag"
+#define BLOOM_FŬSI_FRAG_PATH (const char *) "../shaders/bloom_fǔsi.frag"
 
 #define UP_SAMPLING_FRAG_PATH (const char *) "../shaders/up_sampling.frag"
 #define DOWN_SAMPLING_FRAG_PATH (const char *) "../shaders/down_sampling.frag"

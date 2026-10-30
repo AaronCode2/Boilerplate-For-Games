@@ -155,7 +155,7 @@ void Renderer::applyShader(Vector2 playerVelArg) {
             break;
         }
 
-        // Avoid using small circles.
+        // Avoid using small circles. (This when using max bloom can reduce performance to -50%!)
 
         case ShaderIndex::BLOOM_FŬSI: {
 
@@ -281,70 +281,74 @@ void Renderer::applyShaderToTarget() {
     EndShaderMode();
 }
 
-// Doesn't require HDR monitors.
+// Doesn't require HD monitors.
 
-RenderTexture2D Renderer::LoadHDRRender( int width, int height ) {
+RenderTexture2D Renderer::LoadHDRRender(int width, int height) {
 
-    RenderTexture2D target = { 0 };
+    RenderTexture2D tempBuffer;
 
-    target.id = rlLoadFramebuffer(); // Load an empty framebuffer
+    // Load an empty framebuffer
+    tempBuffer.id = rlLoadFramebuffer(); 
 
-    if ( target.id > 0 ) {
-        rlEnableFramebuffer( target.id );
+    if (tempBuffer.id > 0) {
+        rlEnableFramebuffer(tempBuffer.id);
 
         // Create color texture (default to RGBA)
-        target.texture.id = rlLoadTexture(
+        tempBuffer.texture.id = rlLoadTexture(
             NULL,
             width,
             height,
-            PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,
+            PIXELFORMAT_UNCOMPRESSED_R16G16B16A16,
             1
         );
-        target.texture.width = width;
-        target.texture.height = height;
-        target.texture.format = PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
-        target.texture.mipmaps = 1;
+
+        tempBuffer.texture.width = width;
+        tempBuffer.texture.height = height;
+        tempBuffer.texture.format = PIXELFORMAT_UNCOMPRESSED_R16G16B16A16;
+        tempBuffer.texture.mipmaps = 1;
 
         // Create depth renderbuffer/texture
-        target.depth.id = rlLoadTextureDepth( width, height, true );
-        target.depth.width = width;
-        target.depth.height = height;
-        target.depth.format = 19; // DEPTH_COMPONENT_24BIT?
-        target.depth.mipmaps = 1;
+        tempBuffer.depth.id = rlLoadTextureDepth(width, height, true);
+        tempBuffer.depth.width = width;
+        tempBuffer.depth.height = height;
+        tempBuffer.depth.format = 19; // DEPTH_COMPONENT_24BIT?
+        tempBuffer.depth.mipmaps = 1;
 
         // Attach color texture and depth renderbuffer/texture to FBO
         rlFramebufferAttach(
-            target.id,
-            target.texture.id,
+            tempBuffer.id,
+            tempBuffer.texture.id,
             RL_ATTACHMENT_COLOR_CHANNEL0,
             RL_ATTACHMENT_TEXTURE2D,
             0
         );
+
         rlFramebufferAttach(
-            target.id,
-            target.depth.id,
+            tempBuffer.id,
+            tempBuffer.depth.id,
             RL_ATTACHMENT_DEPTH,
             RL_ATTACHMENT_RENDERBUFFER,
             0
         );
 
-        // Check if fbo is complete with attachments (valid)
-        if (rlFramebufferComplete( target.id ))
+        // Check if buffer is complete with attachments (valid)
+        if(rlFramebufferComplete(tempBuffer.id))
             TRACELOG(
                 LOG_INFO,
-                "FBO: [ID %i] Framebuffer object created successfully",
-                target.id
+                "FBO: [ID %i] renderBuffer object created successfully",
+                tempBuffer.id
             );
 
         rlDisableFramebuffer();
-    } else
-        TRACELOG( LOG_WARNING, "FBO: Framebuffer object can not be created" );
+    }else
+        TRACELOG(LOG_WARNING, "FBO: renderBuffer object can not be created");
 
-    // AHHHHHHHHHHHHHHHHHHHHHHHH
-    SetTextureFilter( target.texture, TEXTURE_FILTER_BILINEAR );
-    SetTextureWrap( target.texture, TEXTURE_WRAP_CLAMP );
+    // I use windows btw, sorry for flexing. :)
 
-    return target;
+    SetTextureFilter( tempBuffer.texture, TEXTURE_FILTER_BILINEAR );
+    SetTextureWrap( tempBuffer.texture, TEXTURE_WRAP_CLAMP );
+
+    return tempBuffer;
 }
 
 void Renderer::blendBuffers(int inputBuffer1, int inputBuffer2, int outputBuffer) {

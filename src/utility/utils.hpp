@@ -248,7 +248,9 @@ namespace Mouse {
 
 #define RAYLIB_SHADER 0
 
+// Min of 3. Going lower, will crash 100% certain. This will only give +1-5fps. So no point.
 #define NUM_OF_RENDER_BUFFERS 8
+
 #define TARGET_BUFFER 0
 
 #define PLAYER_LIGHT_OFFSET (Vector2) {45.0f, -45.0f}
